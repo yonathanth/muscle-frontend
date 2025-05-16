@@ -74,23 +74,23 @@ const Header: React.FC = () => {
         <ul className="pt-20 flex flex-col items-center md:flex-row text-base space-y-4 md:space-y-0 md:space-x-10 lg:space-x-14 p-6 md:p-0 ml-auto md:ml-0">
           <li className="cursor-pointer relative group">
             <Link href="/">{t("home_Page.nav.links.0")}</Link>
-            <span className="absolute left-1/2 bottom-0 transform -translate-x-1/2 h-[2px] w-0 bg-[#2596BE] transition-all duration-300 group-hover:w-8"></span>
+            <span className="absolute left-1/2 bottom-0 transform -translate-x-1/2 h-[2px] w-0 bg-[#871818] transition-all duration-300 group-hover:w-8"></span>
           </li>
           <li className="cursor-pointer relative group">
             <Link href="/about">{t("home_Page.nav.links.1")}</Link>
-            <span className="absolute left-1/2 bottom-0 transform -translate-x-1/2 h-[2px] w-0 bg-[#2596BE] transition-all duration-300 group-hover:w-8"></span>
+            <span className="absolute left-1/2 bottom-0 transform -translate-x-1/2 h-[2px] w-0 bg-[#871818] transition-all duration-300 group-hover:w-8"></span>
           </li>
           <li className="cursor-pointer relative group">
             <Link href="/services">{t("home_Page.nav.links.2")}</Link>
-            <span className="absolute left-1/2 bottom-0 transform -translate-x-1/2 h-[2px] w-0 bg-[#2596BE] transition-all duration-300 group-hover:w-8"></span>
+            <span className="absolute left-1/2 bottom-0 transform -translate-x-1/2 h-[2px] w-0 bg-[#871818] transition-all duration-300 group-hover:w-8"></span>
           </li>
           <li className="cursor-pointer relative group">
             <Link href="/Shop">{t("home_Page.nav.links.3")}</Link>
-            <span className="absolute left-1/2 bottom-0 transform -translate-x-1/2 h-[2px] w-0 bg-[#2596BE] transition-all duration-300 group-hover:w-8"></span>
+            <span className="absolute left-1/2 bottom-0 transform -translate-x-1/2 h-[2px] w-0 bg-[#871818] transition-all duration-300 group-hover:w-8"></span>
           </li>
           <li className="cursor-pointer relative group">
             <Link href="/Contact">{t("home_Page.nav.links.4")}</Link>
-            <span className="absolute left-1/2 bottom-0 transform -translate-x-1/2 h-[2px] w-0 bg-[#2596BE] transition-all duration-300 group-hover:w-8"></span>
+            <span className="absolute left-1/2 bottom-0 transform -translate-x-1/2 h-[2px] w-0 bg-[#871818] transition-all duration-300 group-hover:w-8"></span>
           </li>
           <li className="lg:hidden cursor-pointer relative group">
             <LanguageSwitcher />

@@ -13,11 +13,11 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
   title: {
-    default: "Robi Fitness Hawassa",
-    template: "%s | Robi Fitness Hawassa",
+    default: "MUSCLE FITNESS Addis",
+    template: "%s | MUSCLE FITNESS Addis",
   },
   description:
-    "Robi Fitness is a Health and Fitness Center in Hawassa, offering top-notch fitness services and facilities.",
+    "MUSCLE FITNESS is a Health and Fitness Center in Addis, offering top-notch fitness services and facilities.",
 };
 
 export default async function RootLayout({
@@ -36,20 +36,20 @@ export default async function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </head>
       <body className={`font-jost ${inter.className}`}>
-        {/* <ServiceProvider>
+        <ServiceProvider>
           <CartProvider>
             <NextIntlClientProvider messages={messages}>
               {children}
             </NextIntlClientProvider>
           </CartProvider>
-        </ServiceProvider> */}
+        </ServiceProvider>
 
-        <div className="bg-black h-full">
+        {/* <div className="bg-black h-full">
           <h1 className="text-customBlue text-center ">
             {" "}
             Website Under Maintainance, please check back later.
           </h1>
-        </div>
+        </div> */}
       </body>
     </html>
   );

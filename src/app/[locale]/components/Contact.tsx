@@ -17,7 +17,7 @@ const Contact = () => {
           <div className="mb-6 flex justify-center md:justify-start items-center">
             <FontAwesomeIcon
               icon={faMapMarkerAlt}
-              className="text-[#2596BE] text-2xl mr-4"
+              className="text-[#871818] text-2xl mr-4"
             />
             <p className="text-sm font-thin">{t("address")}</p>
           </div>
@@ -26,7 +26,7 @@ const Contact = () => {
             <div className="flex items-center">
               <FontAwesomeIcon
                 icon={faPhoneAlt}
-                className="text-[#2596BE] text-2xl mr-2"
+                className="text-[#871818] text-2xl mr-2"
               />
 
               {t("phone")}
@@ -35,7 +35,7 @@ const Contact = () => {
             <div className="flex items-center">
               <FontAwesomeIcon
                 icon={faEnvelope}
-                className="text-[#2596BE] text-2xl mr-2"
+                className="text-[#871818] text-2xl mr-2"
               />
 
               {t("email")}

@@ -21,7 +21,9 @@ export function BarChartComponent() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`${NEXT_PUBLIC_API_BASE_URL}/api/dashboard/attendanceData`);
+      const response = await axios.get(
+        `${NEXT_PUBLIC_API_BASE_URL}/api/dashboard/attendanceData`
+      );
       if (response.data.success) {
         updateChartData(response.data.data);
         setLoading(false);
@@ -35,13 +37,15 @@ export function BarChartComponent() {
   const updateChartData = (data: any) => {
     if (selectedPeriod === "Weekly") {
       const weeklyData = data.weekly.map((item: any) => ({
-        day: new Date(item.date).toLocaleDateString("en-US", { weekday: "short" }),
+        day: new Date(item.date).toLocaleDateString("en-US", {
+          weekday: "short",
+        }),
         attendance: item.count,
       }));
       setChartData(weeklyData);
     } else if (selectedPeriod === "Monthly") {
       const monthlyData = data.monthly.map((item: any) => ({
-        day: new Date(item.date).getDate(), 
+        day: new Date(item.date).getDate(),
         attendance: item.count,
       }));
       setChartData(monthlyData);
@@ -63,7 +67,11 @@ export function BarChartComponent() {
   }, [selectedPeriod]);
 
   if (loading) {
-    return <p className="text-white"><LoadingPage/></p>;
+    return (
+      <p className="text-white">
+        <LoadingPage />
+      </p>
+    );
   }
 
   return (
@@ -71,20 +79,33 @@ export function BarChartComponent() {
       <div className="mb-4 flex justify-between items-center">
         <h2 className="text-lg font-semibold">Attendance</h2>
         <select
-  value={selectedPeriod}
-  onChange={handlePeriodChange}
-  className="text-gray-400 bg-[#121212] border border-gray-500 px-3 py-1 rounded-full text-sm cursor-pointer] focus:ring-customBlue-500 focus:border-customBlue-500
+          value={selectedPeriod}
+          onChange={handlePeriodChange}
+          className="text-gray-400 bg-[#121212] border border-gray-500 px-3 py-1 rounded-full text-sm cursor-pointer] focus:ring-customBlue-500 focus:border-customBlue-500
   hover:bg-gray-800 active:bg-gray-700"
->
-  <option className="bg-[#121212] text-white hover:bg-gray-800">Weekly</option>
-  <option className="bg-[#121212] text-white hover:bg-gray-800">Monthly</option>
-  <option className="bg-[#121212] text-white hover:bg-gray-800">Yearly</option>
-</select>
+        >
+          <option className="bg-[#121212] text-white hover:bg-gray-800">
+            Weekly
+          </option>
+          <option className="bg-[#121212] text-white hover:bg-gray-800">
+            Monthly
+          </option>
+          <option className="bg-[#121212] text-white hover:bg-gray-800">
+            Yearly
+          </option>
+        </select>
       </div>
       <div style={{ width: "100%", height: 200 }} className="w-full h-[12rem]">
         <ResponsiveContainer>
-          <BarChart data={chartData} margin={{ top: 20, right: 30, left: -30, bottom: 0 }}>
-            <CartesianGrid stroke="#2C2C2C" strokeDasharray="3 3" vertical={false} />
+          <BarChart
+            data={chartData}
+            margin={{ top: 20, right: 30, left: -30, bottom: 0 }}
+          >
+            <CartesianGrid
+              stroke="#2C2C2C"
+              strokeDasharray="3 3"
+              vertical={false}
+            />
             <XAxis
               className="text-tiny"
               dataKey="day"
@@ -108,7 +129,7 @@ export function BarChartComponent() {
             />
             <Bar
               dataKey="attendance"
-              fill="#2596BE"
+              fill="#871818"
               radius={[10, 10, 0, 0]}
               stroke="#2C2C2C"
               strokeWidth={1}

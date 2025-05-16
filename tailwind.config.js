@@ -37,7 +37,7 @@ module.exports = {
         jostVariable: ["JostVariable", "sans-serif"],
       },
       colors: {
-        customBlue: "#2596BE",
+        customBlue: "#871818",
         customHoverBlue: "#2595bedb",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",

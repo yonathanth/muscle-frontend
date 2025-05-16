@@ -75,7 +75,7 @@ const Hero = () => {
             </motion.p>
             <Link
               href="/Register"
-              className="button-custom text-xl text-[#2596BE] border border-solid border-[#2596BE] rounded-md px-5 py-1"
+              className="button-custom text-xl text-[#871818] border border-solid border-[#871818] rounded-md px-5 py-1"
             >
               <span>{t("heroSection.ctaButton")}</span>
             </Link>

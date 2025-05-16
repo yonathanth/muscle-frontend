@@ -42,15 +42,14 @@ const OurServices = () => {
       transition={{ duration: 1 }}
     >
       <div className="container mx-auto">
-
         <Link href="/services">
-          <h2 className="text-6xl font-bold text-[#2596BE] mb-4">
+          <h2 className="text-6xl font-bold text-[#871818] mb-4">
             {t("servicesSection.title")}
           </h2>
         </Link>
         <p className="text-sm text-gray-300 mb-12 max-w-sm">
-          {t("heroSection.services")} {/* here we need to add an approproate description*/}
-
+          {t("heroSection.services")}{" "}
+          {/* here we need to add an approproate description*/}
         </p>
 
         <motion.div
@@ -72,8 +71,10 @@ const OurServices = () => {
               {/* Link the service images to /services */}
               <Link href="/services">
                 <ServiceCard
-                  title={t(`servicesSection.services.${service.key}.title`)} 
-                  description={t(`servicesSection.services.${service.key}.description`)} 
+                  title={t(`servicesSection.services.${service.key}.title`)}
+                  description={t(
+                    `servicesSection.services.${service.key}.description`
+                  )}
                   icon={service.icon}
                   imageSrc={service.imageSrc}
                 />

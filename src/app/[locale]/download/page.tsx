@@ -15,7 +15,7 @@ const fetchImageAsBase64 = async (url: string) => {
 };
 const fetchImageAsBase642 = async (url: string): Promise<string | null> => {
   try {
-    const response = await fetch(`https://robi-api.robifitness.com${url}`);
+    const response = await fetch(`https://robi-api.musclefitness.com${url}`);
     const blob = await response.blob();
     return new Promise((resolve) => {
       const reader = new FileReader();
@@ -55,7 +55,7 @@ const capitalize = (name: string) =>
 const downloadAllMemberIds = async () => {
   try {
     const response = await fetch(
-      "https://robi-api.robifitness.com/api/download"
+      "https://robi-api.musclefitness.com/api/download"
     );
     const { data: members } = await response.json();
 
@@ -201,7 +201,7 @@ const downloadAllMemberIds = async () => {
       // doc.setTextColor(white);
       // doc.setFont("Montserrat", "bold");
       // doc.setFontSize(10);
-      // doc.text("Robi Fitness Center", cardWidth / 2, 33, { align: "center" });
+      // doc.text("MUSCLE FITNESS Center", cardWidth / 2, 33, { align: "center" });
 
       // doc.setFont("Montserrat", "normal");
       // doc.setFontSize(8);
@@ -220,7 +220,7 @@ const downloadAllMemberIds = async () => {
 
       // doc.setFont("Montserrat", "bold");
 
-      // doc.text("www.robifitness.com", cardWidth / 2, 50, { align: "center" });
+      // doc.text("www.musclefitness.com", cardWidth / 2, 50, { align: "center" });
     }
 
     doc.save("All_Member_IDs.pdf");

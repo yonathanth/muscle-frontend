@@ -9,12 +9,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import ExtendModal from "./ExtendModal";
 import Image from "next/image";
-import {User} from "../layout";
+import { User } from "../layout";
 import { WorkoutPlanType } from "@/src/app/[locale]/user/Plans/workoutPlan/page";
 import { MealType } from "@/src/app/[locale]/user/Plans/Meals/page";
 import LoadingPage from "@/src/app/[locale]/user/loading";
 const NEXT_PUBLIC_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-
 
 interface AdvertisementType {
   name: string;
@@ -168,13 +167,13 @@ const Dashboard: React.FC<UserDashboardProps> = ({ userId }) => {
     );
   }, [fetchTodayPlans, getUserDetails]);
 
-  if (isLoading) return <LoadingPage/>
+  if (isLoading) return <LoadingPage />;
 
   return (
     <div className=" bg-black flex flex-col h-auto">
       {/* Header Section */}
       <header className="text-black flex flex-wrap lg:flex-nowrap gap-3 items-center px-4 lg:px-0">
-        <div className="bg-[#2596BE] p-6 sm:p-8 w-full lg:w-[68%] rounded-lg">
+        <div className="bg-[#871818] p-6 sm:p-8 w-full lg:w-[68%] rounded-lg">
           <h1 className="text-lg sm:text-2xl font-extralight">
             Hello{" "}
             <span className="font-bold">
@@ -186,14 +185,14 @@ const Dashboard: React.FC<UserDashboardProps> = ({ userId }) => {
             <span className="font-bold">
               {workout && user?.exercisesCompleted
                 ? (user.exercisesCompleted.length / workout.exercises.length) *
-                100
+                  100
                 : 0}
               %
             </span>{" "}
             of your Goal. Keep pushing!
           </p>
         </div>
-        <div className="bg-[#2596BE] p-6 sm:p-9 w-full lg:w-1/3 rounded-lg relative">
+        <div className="bg-[#871818] p-6 sm:p-9 w-full lg:w-1/3 rounded-lg relative">
           <div
             className={`absolute top-[-0.5px] right-[-0.5px] ${
               user
@@ -263,7 +262,7 @@ const Dashboard: React.FC<UserDashboardProps> = ({ userId }) => {
                     className="flex justify-between items-center py-3 px-4 mb-2 bg-[#292929] rounded-full text-xs sm:text-sm font-light"
                   >
                     <span>{exercise}</span>
-                    {/*<button className="text-[#2596BE]">▶</button>*/}
+                    {/*<button className="text-[#871818]">▶</button>*/}
                   </li>
                 ))
               ) : (
@@ -290,7 +289,9 @@ const Dashboard: React.FC<UserDashboardProps> = ({ userId }) => {
                         {recommendedMeal.category}
                       </h4>
                       <div className="bg-[#292929] flex flex-col justify-between gap-4 py-3 px-3 rounded-lg">
-                        <p className="font-light text-xs">{recommendedMeal.name}</p>
+                        <p className="font-light text-xs">
+                          {recommendedMeal.name}
+                        </p>
                         <p className="text-xs">
                           {recommendedMeal.calories}{" "}
                           <span className="text-[#6a6a6a]">kcal</span>
@@ -309,17 +310,26 @@ const Dashboard: React.FC<UserDashboardProps> = ({ userId }) => {
           <div className="bg-[#1e1e1e] mt-2 p-4 rounded-lg">
             <div className="grid grid-cols-1 sm:grid-rows-3 gap-4">
               {[
-                { label: `${user?.highestStreak ? user.highestStreak : "-"} Days Streak`, icon: faFire },
                 {
-                  label: `${user?.exercisesCompleted ? user?.exercisesCompleted?.length : "-"} Exercises Completed`,
+                  label: `${
+                    user?.highestStreak ? user.highestStreak : "-"
+                  } Days Streak`,
+                  icon: faFire,
+                },
+                {
+                  label: `${
+                    user?.exercisesCompleted
+                      ? user?.exercisesCompleted?.length
+                      : "-"
+                  } Exercises Completed`,
                   icon: faClock,
                 },
                 {
                   label: `${
                     workout && user?.exercisesCompleted
                       ? (user.exercisesCompleted.length /
-                        workout.exercises.length) *
-                      100
+                          workout.exercises.length) *
+                        100
                       : 0
                   } % Progress`,
                   icon: faBarsProgress,
@@ -349,15 +359,19 @@ const Dashboard: React.FC<UserDashboardProps> = ({ userId }) => {
             {/* Image Container */}
             <div>
               <div className="relative h-[300px] w-full bg-cover bg-center rounded-lg mb-4">
-                {advertisement ? (<Image
-                  src={`${NEXT_PUBLIC_API_BASE_URL}/uploads/advertisement/${
-                    advertisement ? advertisement.slug : ""
-                  }`}
-                  fill={true}
-                  quality={90}
-                  alt={advertisement ? advertisement.name : ""}
-                  className="rounded-lg"
-                />) : <div className=""></div>}
+                {advertisement ? (
+                  <Image
+                    src={`${NEXT_PUBLIC_API_BASE_URL}/uploads/advertisement/${
+                      advertisement ? advertisement.slug : ""
+                    }`}
+                    fill={true}
+                    quality={90}
+                    alt={advertisement ? advertisement.name : ""}
+                    className="rounded-lg"
+                  />
+                ) : (
+                  <div className=""></div>
+                )}
               </div>
             </div>
             {/* Paragraph */}

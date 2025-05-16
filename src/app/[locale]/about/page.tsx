@@ -46,7 +46,7 @@ const AboutUsPage = () => {
       <div className="bg-black text-white scroll-container relative">
         {/* Neon Line - Connected and fixed */}
         <motion.div
-          className="absolute top-0 left-[50%] h-full w-1 bg-[#2596BE] neon-glow hidden lg:block"
+          className="absolute top-0 left-[50%] h-full w-1 bg-[#871818] neon-glow hidden lg:block"
           initial={{ scaleY: 0 }}
           animate={{ scaleY: 1 }}
           transition={{ duration: 1, ease: "easeInOut" }}
@@ -92,7 +92,7 @@ const AboutUsPage = () => {
           </div>
         </div>
 
-        {/* Section 1 - About Robi Fitness */}
+        {/* Section 1 - About MUSCLE FITNESS */}
         <section
           className="scroll-section sm:px-[5rem] md:px-[9rem] sm:pt-2 md:pt-20"
           ref={nextSectionRef}
@@ -136,7 +136,7 @@ const AboutUsPage = () => {
             >
               <Image
                 src={aboutUsHero}
-                alt="About Robi Fitness"
+                alt="About MUSCLE FITNESS"
                 objectFit="cover"
                 className="rounded-lg"
                 layout="fill"
@@ -175,7 +175,7 @@ const AboutUsPage = () => {
                   {t("sections.1.id")}
                 </motion.h2>
                 <motion.h2
-                  className="text-2xl font-semibold mb-6 text-[#2596BE] absolute top-1/2 left-0 transform -translate-y-1/2"
+                  className="text-2xl font-semibold mb-6 text-[#871818] absolute top-1/2 left-0 transform -translate-y-1/2"
                   initial={{ opacity: 0, x: -50 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.8 }}
@@ -210,7 +210,7 @@ const AboutUsPage = () => {
                   {t("sections.2.id")}
                 </motion.h2>
                 <motion.h2
-                  className="text-2xl font-semibold mb-6 text-[#2596BE] absolute top-1/2 left-0 transform -translate-y-1/2"
+                  className="text-2xl font-semibold mb-6 text-[#871818] absolute top-1/2 left-0 transform -translate-y-1/2"
                   initial={{ opacity: 0, x: -50 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.8 }}
@@ -250,7 +250,7 @@ const AboutUsPage = () => {
       <section className="mx-auto text-center">
         <Link href="/Register">
           <motion.button
-            className=" button-custom text-xl text-[#2596BE] border border-solid border-[#2596BE] rounded-md px-5 py-1"
+            className=" button-custom text-xl text-[#871818] border border-solid border-[#871818] rounded-md px-5 py-1"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >

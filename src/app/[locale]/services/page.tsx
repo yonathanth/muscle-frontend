@@ -182,7 +182,7 @@ const Page = () => {
               onClick={() => setActiveTab(tab)}
               className={`px-4 py-2 font-bold ${
                 activeTab === tab
-                  ? "text-[#2596BE]"
+                  ? "text-[#871818]"
                   : "text-gray-400 bg-gray-800"
               }`}
             >

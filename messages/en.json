@@ -12,7 +12,7 @@
       ]
     },
     "heroSection": {
-      "title": "ROBI FITNESS",
+      "title": "MUSCLE FITNESS",
       "titleTwo": "CENTER",
       "subtitle": "Where strength meets determination. Your journey to a stronger, better you starts here.",
       "ctaButton": "Join Now",
@@ -21,7 +21,7 @@
     },
     "aboutSection": {
       "title": "About Us",
-      "description": "ROBI Fitness Center is more than just a gym—it’s a family. Located in Hawassa, we’ve created a welcoming environment where members of all fitness levels can achieve their goals. Our passionate team of trainers and state-of-the-art facilities ensure you get the support and guidance needed to succeed."
+      "description": "MUSCLE FITNESS Center is more than just a gym—it’s a family. Located in Addis, we’ve created a welcoming environment where members of all fitness levels can achieve their goals. Our passionate team of trainers and state-of-the-art facilities ensure you get the support and guidance needed to succeed."
     },
     "bmiSection": {
       "heading": "Every rep brings you closer to greatness",
@@ -118,9 +118,9 @@
       ]
     },
     "contactSection": {
-      "address": "Hawassa, Gabriel D.L building",
+      "address": "Addis, Gabriel D.L building",
       "phone": "+251943313282",
-      "email": "robifitness.hawassa@gmail.com"
+      "email": "musclefitness.Addis@gmail.com"
     },
     "footerSection": {
       "company": {
@@ -155,21 +155,21 @@
     "sections": [
       {
         "id": "01",
-        "title": "About Robi Fitness",
-        "content": "Robi Fitness is dedicated to fostering a supportive environment where individuals of all fitness levels can thrive. Our gym offers state-of-the-art equipment and expert trainers who are passionate about helping you achieve your fitness goals."
+        "title": "About MUSCLE FITNESS",
+        "content": "MUSCLE FITNESS is dedicated to fostering a supportive environment where individuals of all fitness levels can thrive. Our gym offers state-of-the-art equipment and expert trainers who are passionate about helping you achieve your fitness goals."
       },
       {
         "id": "02",
         "title": "Our Philosophy",
-        "content": "At Robi Fitness, we believe in a holistic approach to health and wellness. Fitness isn't just about physical strength — it's about building mental resilience, confidence, and overall well-being."
+        "content": "At MUSCLE FITNESS, we believe in a holistic approach to health and wellness. Fitness isn't just about physical strength — it's about building mental resilience, confidence, and overall well-being."
       },
       {
         "id": "03",
         "title": "Our Facilities & Trainers",
-        "content": "Robi Fitness is equipped with the latest fitness technology and an inspiring space designed for every fitness level. Our experienced trainers are here to support your growth, offering personalized guidance to help you maximize your potential."
+        "content": "MUSCLE FITNESS is equipped with the latest fitness technology and an inspiring space designed for every fitness level. Our experienced trainers are here to support your growth, offering personalized guidance to help you maximize your potential."
       },
       {
-        "callToAction": "Join Robi Fitness now",
+        "callToAction": "Join MUSCLE FITNESS now",
         "teamTitle": "Meet the Team",
         "team": [
           {
@@ -362,7 +362,7 @@
     "details": {
       "address": {
         "label": "Address",
-        "value": "Hawassa, Gabriel D.L building"
+        "value": "Addis, Gabriel D.L building"
       },
       "phone": {
         "label": "Phone",
@@ -370,7 +370,7 @@
       },
       "email": {
         "label": "Email",
-        "value": "robifitness.hawassa@gmail.com"
+        "value": "musclefitness.Addis@gmail.com"
       }
     },
     "feedback_form": {

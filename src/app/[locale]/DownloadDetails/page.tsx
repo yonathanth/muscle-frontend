@@ -18,7 +18,7 @@ const fetchImageAsBase64 = async (url: string) => {
 const downloadMemberDetails = async () => {
   try {
     const response = await fetch(
-      "https://robi-api.robifitness.com/api/members"
+      "https://robi-api.musclefitness.com/api/members"
     );
     const result = await response.json();
     const members = result.data.users || [];

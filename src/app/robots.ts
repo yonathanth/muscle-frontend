@@ -14,6 +14,6 @@ export default function robots(): MetadataRoute.Robots {
         ),
       },
     ],
-    sitemap: "https://robifitness.com/sitemap.xml",
+    sitemap: "https://musclefitness.com/sitemap.xml",
   };
 }

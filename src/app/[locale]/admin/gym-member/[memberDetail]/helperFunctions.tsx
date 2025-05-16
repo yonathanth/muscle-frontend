@@ -199,7 +199,7 @@ const downloadMemberId = async (memberDetails: memberDetails) => {
   doc.setTextColor(white);
   doc.setFont("Montserrat", "bold");
   doc.setFontSize(10);
-  doc.text("Robi Fitness Center", cardWidth / 2, 33, { align: "center" });
+  doc.text("MUSCLE FITNESS Center", cardWidth / 2, 33, { align: "center" });
 
   doc.setFont("Montserrat", "normal");
   doc.setFontSize(8);
@@ -218,7 +218,7 @@ const downloadMemberId = async (memberDetails: memberDetails) => {
 
   doc.setFont("Montserrat", "bold");
 
-  doc.text("www.robifitness.com", cardWidth / 2, 50, { align: "center" });
+  doc.text("www.musclefitness.com", cardWidth / 2, 50, { align: "center" });
 
   // Save the PDF
   doc.save(`${memberDetails.fullName}_MembershipID.pdf`);
