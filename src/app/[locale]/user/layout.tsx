@@ -149,44 +149,11 @@ export default function UserLayout({
 
   return (
     <div className="flex h-screen font-jost">
-      {/* Sidebar (Fixed) */}
-      <div
-        className={`${
-          sidebarOpen ? "fixed" : "hidden"
-        } fixed top-0 left-0 h-full bg-black lg:relative lg:flex lg:h-auto z-20`}
-      >
-        <UserSidebar setActiveNav={setActiveNav} />
-      </div>
-      {/* Overlay Background for Sidebar (when open) */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black opacity-50 z-10 lg:hidden font-jost"
-          onClick={() => setSidebarOpen(false)}
-        ></div>
-      )}
-      {/* Mobile Sidebar & Header */}
-      <div className="flex-1 flex flex-col lg:hidden">
-        <div className="flex flex-row justify-between">
-          {/* Burger Icon for Mobile */}
-          <button
-            className="lg:hidden p-4 z-10"
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-          >
-            <FontAwesomeIcon icon={faBars} className="text-white text-2xl" />
-          </button>
-
-          <UserHeader activeNav={activeNav} user={user} />
-        </div>
-        {/* Main content that scrolls if needed */}
-        <main className="flex-1 bg-black overflow-auto">{children}</main>
-      </div>
-      {/* Desktop Layout */}
-      <div className="hidden lg:flex flex-1 flex-col">
-        {/* Desktop Header */}
+      <div className="flex-1 flex flex-col">
+        {/* Header */}
         <UserHeader activeNav={activeNav} user={user} />
-
-        {/* Main content that scrolls if needed */}
-        <main className="flex-1 bg-black p-6 overflow-auto">{children}</main>
+        {/* Main content */}
+        <main className="flex-1 bg-black overflow-auto">{children}</main>
       </div>
     </div>
   );

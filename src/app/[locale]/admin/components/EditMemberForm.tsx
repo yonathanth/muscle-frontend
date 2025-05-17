@@ -4,7 +4,6 @@ import axios from "axios";
 import SmallLoading from "./SmallLoading";
 const NEXT_PUBLIC_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-
 interface Service {
   id: string;
   name: string;
@@ -140,7 +139,9 @@ const EditAdmin = ({ setShowModal, fetchData, member }: EditAdminProps) => {
 
   const fetchServices = async () => {
     try {
-      const response = await axios.get(`${NEXT_PUBLIC_API_BASE_URL}/api/services`);
+      const response = await axios.get(
+        `${NEXT_PUBLIC_API_BASE_URL}/api/services`
+      );
       setServices(response.data.data);
     } catch {
       setError("Failed to fetch services.");
@@ -254,6 +255,10 @@ const EditAdmin = ({ setShowModal, fetchData, member }: EditAdminProps) => {
       );
 
       if (response.status === 200) {
+        // Keep current page and search terms while refreshing
+        const searchParams = new URLSearchParams(window.location.search);
+        window.history.pushState({}, "", `?${searchParams.toString()}`);
+
         fetchData();
         setShowModal(false);
         router.push(`/en/admin/gym-member/${member.id}`);

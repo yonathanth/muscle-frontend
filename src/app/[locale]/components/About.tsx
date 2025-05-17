@@ -15,7 +15,7 @@ const About = () => {
   return (
     <div>
       <section className="text-white mb-8 lg:mb-24 px-4 sm:px-6 lg:px-[7rem] font-jost">
-        <div className="container mx-auto max-w-6xl">
+        <div className="container mx-auto max-w-7xl">
           {/* Set max-width here */}
           <div className="flex flex-col lg:flex-row items-stretch">
             {/* Left Image Section */}

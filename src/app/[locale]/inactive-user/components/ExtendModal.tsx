@@ -89,7 +89,7 @@ const ExtendModal: React.FC<ExtendModalProps> = ({
               <div className="flex justify-center space-x-4">
                 <button
                   onClick={handleConfirm}
-                  className="bg-[#1ea7fd] text-black font-semibold px-4 py-2 rounded-full hover:bg-[#1483c4] transition disabled:opacity-50"
+                  className="bg-customBlue text-black font-semibold px-4 py-2 rounded-full hover:bg-customHoverBlue transition disabled:opacity-50"
                   disabled={isLoading}
                 >
                   {isLoading ? "Processing..." : "Confirm"}

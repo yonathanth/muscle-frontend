@@ -14,9 +14,9 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ setActiveNav }) => {
     { name: "Attendance", path: "/en/admin/attendance-list" },
 
     { name: "Employees", path: "/en/admin/employee" },
-    { name: "Inventory", path: "/en/admin/inventory" },
+    // { name: "Inventory", path: "/en/admin/inventory" },
     { name: "Stock", path: "/en/admin/stock" },
-    { name: "Orders", path: "/en/admin/orders" },
+    // { name: "Orders", path: "/en/admin/orders" },
     { name: "Financial Report", path: "/en/admin/financial-report" },
     { name: "Services", path: "/en/admin/services" },
     { name: "Requests", path: "/en/admin/subscription-request" },

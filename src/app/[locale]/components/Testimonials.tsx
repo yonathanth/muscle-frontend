@@ -64,7 +64,7 @@ const Testimonials: React.FC = () => {
 
   return (
     <>
-      <div className="relative max-w-6xl mx-auto px-4 sm:px-8 py-10 mb-10">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-8 py-10 ">
         {/* Testimonials */}
         <motion.div
           className="flex flex-col md:flex-row justify-between bg-black text-white p-5 rounded-lg transition-all duration-500 ease-in-out"

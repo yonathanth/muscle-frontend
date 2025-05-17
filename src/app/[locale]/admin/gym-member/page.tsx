@@ -25,7 +25,8 @@ interface Service {
   category: string;
   description?: string[];
 }
-export type Member = {
+
+interface Member {
   id: string;
   fullName: string;
   gender: string;
@@ -52,7 +53,8 @@ export type Member = {
   serviceId: string | null;
   profileImageUrl: string | null;
   service: Service;
-};
+  role: string;
+}
 
 const GymMembersList = () => {
   const router = useRouter();
@@ -61,9 +63,19 @@ const GymMembersList = () => {
   // Initialize state from query parameters
   const initialSearchTerm = searchParams.get("searchTerm") || "";
   const initialStatusFilter = searchParams.get("statusFilter") || "";
-  const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
-  const [statusFilter, setStatusFilter] = useState(initialStatusFilter);
-  const [isLoading, setIsLoading] = useState(false);
+  const initialPage = parseInt(searchParams.get("page") || "1");
+  const initialSortBy = searchParams.get("sortBy") || "registrationDate";
+  const initialSortOrder = searchParams.get("sortOrder") || "desc";
+
+  const [searchTerm, setSearchTerm] = useState<string>(initialSearchTerm);
+  const [searchInput, setSearchInput] = useState<string>(initialSearchTerm);
+  const [statusFilter, setStatusFilter] = useState<string>(initialStatusFilter);
+  const [currentPage, setCurrentPage] = useState<number>(initialPage);
+  const [sortBy, setSortBy] = useState<string>(initialSortBy);
+  const [sortOrder, setSortOrder] = useState<string>(initialSortOrder);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const [totalMembers, setTotalMembers] = useState<number>(0);
 
   const [memberList, setMemberList] = useState<Member[]>([]);
   const [dropdownIndex, setDropdownIndex] = useState<number | null>(null);
@@ -77,33 +89,27 @@ const GymMembersList = () => {
   let [freezeDuration, setFreezeDuration] = useState<number>();
 
   let [activationDate, setActivationDate] = useState<string>("");
-  const [errorMessage, setErrorMessage] = useState(""); // State for error message
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [memberToDelete, setMemberToDelete] = useState<Member | null>(null);
-  const [loading, setLoading] = useState<boolean>(true); // Add loading state
-  const [showAddMemberModal, setShowAddMemberModal] = useState<boolean>(false); // State for AddMember modal
-  const [isPageLoading, setIsPageLoading] = useState<boolean>(false);
-  const dropdownRef = useRef<HTMLDivElement | null>(null); // Reference for the dropdown menu
+  const [isPageLoading, setIsPageLoading] = useState<boolean>(true);
+  const [showAddMemberModal, setShowAddMemberModal] = useState<boolean>(false);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
+
   const fetchMembers = async () => {
     setIsPageLoading(true);
     try {
       const response = await axios.get(
-        `${NEXT_PUBLIC_API_BASE_URL}/api/members`
+        `${NEXT_PUBLIC_API_BASE_URL}/api/members?page=${currentPage}&search=${searchTerm}&status=${statusFilter}&sortBy=${sortBy}&sortOrder=${sortOrder}`
       );
-      const users = response.data.data.users;
-
-      // Filter out members with the role 'root'
-      const filteredUsers = users.filter(
-        (user: { role: string }) => user.role === "user"
-      );
-
-      setMemberList(filteredUsers);
-      setLoading(false);
+      const { users, pagination } = response.data.data;
+      setMemberList(users);
+      setTotalPages(pagination.totalPages);
+      setTotalMembers(pagination.total);
     } catch (error) {
       console.error("Error fetching members:", error);
       setErrorMessage("Failed to load members. Please try again.");
-      setLoading(false);
     } finally {
       setIsPageLoading(false);
     }
@@ -111,14 +117,28 @@ const GymMembersList = () => {
 
   useEffect(() => {
     fetchMembers();
-  }, []);
+  }, [currentPage, searchTerm, statusFilter, sortBy, sortOrder]);
+
   useEffect(() => {
     const params = new URLSearchParams();
     if (searchTerm) params.set("searchTerm", searchTerm);
     if (statusFilter) params.set("statusFilter", statusFilter);
-    // router.push changes the URL, updating the query string
+    if (currentPage > 1) params.set("page", currentPage.toString());
+    if (sortBy !== "registrationDate") params.set("sortBy", sortBy);
+    if (sortOrder !== "desc") params.set("sortOrder", sortOrder);
     router.push(`?${params.toString()}`);
-  }, [searchTerm, statusFilter, router]);
+  }, [searchTerm, statusFilter, currentPage, sortBy, sortOrder, router]);
+
+  const handleSort = (newSortBy: string) => {
+    if (newSortBy === sortBy) {
+      // Toggle sort order if clicking the same column
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    } else {
+      // Set new sort column and default to descending
+      setSortBy(newSortBy);
+      setSortOrder("desc");
+    }
+  };
 
   const filteredMembers = memberList.filter((member) => {
     const matchesSearchTerm = member.fullName
@@ -282,6 +302,17 @@ const GymMembersList = () => {
     setMemberToDelete(null);
   };
 
+  const handleSearch = () => {
+    setSearchTerm(searchInput);
+    setCurrentPage(1); // Reset to first page when searching
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
+
   return isPageLoading ? (
     <Loading />
   ) : (
@@ -309,7 +340,7 @@ const GymMembersList = () => {
               />
             </span>
           </button>
-          <div className="relative w-full sm:w-auto">
+          <div className="relative w-full sm:w-auto flex items-center">
             <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <FontAwesomeIcon
                 icon={faSearch}
@@ -319,10 +350,17 @@ const GymMembersList = () => {
             <input
               type="text"
               placeholder="Search..."
-              className="w-full pl-10 px-6 py-2 rounded-md bg-[#ffffff29] text-gray-300 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-customBlue"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 px-6 py-2 rounded-l-md bg-[#ffffff29] text-gray-300 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-customBlue"
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              onKeyPress={handleKeyPress}
             />
+            <button
+              onClick={handleSearch}
+              className="px-4 py-2 rounded-r-md bg-[#ffffff29] text-gray-300 border border-gray-600 border-l-0 hover:bg-[#ffffff3d]"
+            >
+              Search
+            </button>
           </div>
           <div className="relative ">
             <div className="bg-[#ffffff29] px-4 py-2 rounded-md border border-gray-600 flex items-center">
@@ -374,20 +412,32 @@ const GymMembersList = () => {
           <table className="min-w-[800px] w-full mb-32">
             <thead>
               <tr>
-                <th className="px-2 text-left text-gray-200 font-bold text-sm py-3">
-                  Name
+                <th
+                  className="px-2 text-left text-gray-200 font-bold text-sm py-3 cursor-pointer hover:text-customBlue"
+                  onClick={() => handleSort("name")}
+                >
+                  Name {sortBy === "name" && (sortOrder === "asc" ? "↑" : "↓")}
                 </th>
                 <th className="px-2 text-left text-gray-200 font-bold text-sm py-3">
                   Phone no.
                 </th>
-                <th className="px-2 text-left text-gray-200 font-bold text-sm py-3">
+                <th
+                  className="px-2 text-left text-gray-200 font-bold text-sm py-3 cursor-pointer hover:text-customBlue"
+                  onClick={() => handleSort("daysLeft")}
+                >
                   Days Left{" "}
+                  {sortBy === "daysLeft" && (sortOrder === "asc" ? "↑" : "↓")}
                 </th>
                 <th className="px-2 text-left text-gray-200 font-bold text-sm py-3">
                   Service{" "}
                 </th>
-                <th className="px-2 text-left text-gray-200 font-bold text-sm py-3">
-                  Start Date
+                <th
+                  className="px-2 text-left text-gray-200 font-bold text-sm py-3 cursor-pointer hover:text-customBlue"
+                  onClick={() => handleSort("registrationDate")}
+                >
+                  Start Date{" "}
+                  {sortBy === "registrationDate" &&
+                    (sortOrder === "asc" ? "↑" : "↓")}
                 </th>
                 <th className="px-2 text-left text-gray-200 font-bold text-sm py-3">
                   Status
@@ -649,6 +699,40 @@ const GymMembersList = () => {
         </div>
       </div>
 
+      {/* Pagination */}
+      <div className="flex justify-between items-center mt-4 mb-8">
+        <div className="text-gray-400">
+          Showing {(currentPage - 1) * 40 + 1} to{" "}
+          {Math.min(currentPage * 40, totalMembers)} of {totalMembers} members
+        </div>
+        <div className="flex space-x-2">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className={`px-4 py-2 rounded-md ${
+              currentPage === 1
+                ? "bg-gray-700 text-gray-500 cursor-not-allowed"
+                : "bg-[#ffffff29] text-gray-300 hover:bg-[#ffffff3d]"
+            }`}
+          >
+            Previous
+          </button>
+          <button
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
+            disabled={currentPage === totalPages}
+            className={`px-4 py-2 rounded-md ${
+              currentPage === totalPages
+                ? "bg-gray-700 text-gray-500 cursor-not-allowed"
+                : "bg-[#ffffff29] text-gray-300 hover:bg-[#ffffff3d]"
+            }`}
+          >
+            Next
+          </button>
+        </div>
+      </div>
+
       {/* Delete Confirmation Modal */}
       {showDeleteModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -736,47 +820,6 @@ const GymMembersList = () => {
         </div>
       )}
     </div>
-    // <div className="min-h-screen flex items-center justify-center bg-black px-4">
-    //   {/* Modal container */}
-    //   <div
-    //     className="bg-[#121212] text-white rounded-lg p-6 w-full max-w-lg sm:max-w-lg lg:max-w-2xl shadow-md"
-    //     style={{
-    //       backdropFilter: "blur(10px)",
-    //       border: "1px solid #fff",
-    //     }}
-    //   >
-    //     {/* Modal title */}
-    //     <h2
-    //       className="text-center text-6xl font-bold mb-6
-    //     "
-    //     >
-    //       {" "}
-    //       ሰላም👋!{" "}
-    //     </h2>
-
-    //     <h2
-    //       className="text-center text-2xl  mb-2 text-white
-    //     "
-    //     >
-    //       አገልግሎቱን ለማስቀጠል <span className="font-bold ">እባኮት</span> ከታች ባሉት አካውንቶች
-    //       የቀረቦትን ክፍያ (65,000.00 ብር) ያስገቡ! እናመሰግናለን!
-    //     </h2>
-    //     {/* Modal content */}
-    //     <p className="text-lg  text-center mb-6 leading-9">
-    //       Leul Derebe - 1000298686418 <br />
-    //       Yonatan Tenaye - 1000477728147
-    //     </p>
-
-    //     {/* Action button */}
-    //     <div className="flex justify-center">
-    //       <Link href="/">
-    //         <button className="bg-[#1ea7fd] text-black font-semibold px-6 py-2 rounded-full hover:bg-[#1483c4] transition">
-    //           Back to Home{" "}
-    //         </button>
-    //       </Link>
-    //     </div>
-    //   </div>
-    // </div>
   );
 };
 

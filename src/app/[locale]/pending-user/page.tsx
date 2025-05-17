@@ -6,7 +6,6 @@ import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 const NEXT_PUBLIC_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-
 interface CustomJwtPayload {
   id: string;
 }
@@ -70,7 +69,7 @@ const ResponsiveModal: React.FC = () => {
       {/* Top-right toggle button */}
       <button
         onClick={() => setIsOpen((prev) => !prev)}
-        className="absolute top-6 right-6 bg-[#1ea7fd] text-black font-semibold px-4 py-2 rounded-full hover:bg-[#1483c4] transition z-50"
+        className="absolute top-6 right-6 bg-customBlue text-black font-semibold px-4 py-2 rounded-full hover:bg-customHoverBlue transition z-50"
       >
         Payment Options
       </button>
@@ -98,7 +97,7 @@ const ResponsiveModal: React.FC = () => {
         {!filledOUtTheForm && (
           <div className="flex justify-center">
             <button
-              className="bg-[#1ea7fd] text-black font-semibold px-4 py-2 rounded-full hover:bg-[#1483c4] transition"
+              className="bg-customBlue text-black font-semibold px-4 py-2 rounded-full hover:bg-customHoverBlue transition"
               onClick={() => router.push(`/en/pending-user/form?id=${userId}`)}
             >
               Fill Out the Forms{" "}

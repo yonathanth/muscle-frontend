@@ -61,16 +61,13 @@ const DashboardContent: React.FC = () => {
     const fetchPendingMembers = async () => {
       try {
         const response = await axios.get(
-          `${NEXT_PUBLIC_API_BASE_URL}/api/members`
+          `${NEXT_PUBLIC_API_BASE_URL}/api/dashboard/pendingMembers`
         );
         if (response.data.success) {
-          const pending = response.data.data.users.filter(
-            (user: Member) => user.status === "pending" && user.role === "user"
-          );
-          setPendingMembers(pending);
+          setPendingMembers(response.data.data);
         }
       } catch (error) {
-        console.error("Error fetching members:", error);
+        console.error("Error fetching pending members:", error);
       }
     };
 
@@ -94,6 +91,14 @@ const DashboardContent: React.FC = () => {
         setPendingMembers((prev) =>
           prev.filter((member) => member.id !== selectedMember.id)
         );
+
+        const statsResponse = await axios.get(
+          `${NEXT_PUBLIC_API_BASE_URL}/api/dashboard/cardData`
+        );
+        if (statsResponse.data.success) {
+          setDashboardStats(statsResponse.data.data);
+        }
+
         setIsModalOpen(false);
         setSelectedMember(null);
       }

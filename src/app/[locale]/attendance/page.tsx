@@ -43,7 +43,7 @@ const AttendancePage: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-black px-6 py-12">
-      <h1 className="text-2xl font-bold text-[#1ea7fd] mb-6">Attendance</h1>
+      <h1 className="text-2xl font-bold text-customBlue mb-6">Attendance</h1>
 
       {/* Input for barcode scanner */}
       <div className="w-full max-w-sm">
@@ -53,7 +53,7 @@ const AttendancePage: React.FC = () => {
         <input
           type="text"
           id="barcode"
-          className="w-full mt-2 p-2 rounded-lg border border-gray-600 bg-[#121212] text-white focus:outline-none focus:ring-2 focus:ring-[#1ea7fd]"
+          className="w-full mt-2 p-2 rounded-lg border border-gray-600 bg-[#121212] text-white focus:outline-none focus:ring-2 focus:ring-customBlue"
           placeholder="Scan barcode..."
           value={userId}
           onChange={handleScan}
@@ -64,7 +64,7 @@ const AttendancePage: React.FC = () => {
       {/* Button to record attendance */}
       <button
         onClick={handleAttendance}
-        className="mt-4 bg-[#1ea7fd] text-black font-semibold px-4 py-2 rounded-full hover:bg-[#1483c4] transition"
+        className="mt-4 bg-customBlue text-black font-semibold px-4 py-2 rounded-full hover:bg-customHoverBlue transition"
         disabled={!userId}
       >
         Record Attendance

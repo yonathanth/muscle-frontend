@@ -37,7 +37,7 @@ const Register = () => {
   const [formData, setFormData] = useState({
     fullName: "",
     phoneNumber: "",
-    password: "",
+    password: "mf1234",
     email: "",
     address: "",
     dob: "",
@@ -130,10 +130,10 @@ const Register = () => {
       return;
     }
 
-    if (!isTermsChecked) {
-      setError("Please agree to the terms and conditions below.");
-      return;
-    }
+    // if (!isTermsChecked) {
+    //   setError("Please agree to the terms and conditions below.");
+    //   return;
+    // }
     if (!formData.profileImage) {
       setError("Please upload a picture");
       return;
@@ -261,14 +261,14 @@ const Register = () => {
                 className="w-full p-3 border border-zinc-600 rounded-md focus:outline-none focus:ring-1 focus:ring-customBlue bg-gray-800 text-gray-400"
                 placeholder={t("fields.phone_number")}
               />
-              <input
+              {/* <input
                 name="password"
                 value={formData.password}
                 onChange={handleInputChange}
                 type="password"
                 className="w-full p-3 border border-zinc-600 rounded-md focus:outline-none focus:ring-1 focus:ring-customBlue bg-gray-800 text-gray-400"
                 placeholder={t("fields.password")}
-              />
+              /> */}
 
               <input
                 name="address"
@@ -454,7 +454,7 @@ const Register = () => {
                 )}
               </div>
             </div>
-            <label className="text-gray-400">
+            {/* <label className="text-gray-400">
               <input
                 className="form-checkbox m-1 mb-[-2px] mt-3"
                 type="checkbox"
@@ -468,12 +468,12 @@ const Register = () => {
               >
                 Terms and conditions
               </button>
-              {/* Modal component */}
-              <TermsAndConditionsModal
+              {/* Modal component */
+            /* <TermsAndConditionsModal
                 isOpen={isTermsModalOpen}
                 onClose={closeTermsModal}
               />
-            </label>
+            </label> */}
           </div>
           <div className="my-4  sm:hidden">
             {error && (
@@ -521,7 +521,7 @@ export default Register;
 //         {/* Action button */}
 //         <div className="flex justify-center">
 //           <Link href="/">
-//             <button className="bg-[#1ea7fd] text-black font-semibold px-6 py-2 rounded-full hover:bg-[#1483c4] transition">
+//             <button className="bg-customBlue text-black font-semibold px-6 py-2 rounded-full hover:bg-customHoverBlue transition">
 //               Back to Home{" "}
 //             </button>
 //           </Link>

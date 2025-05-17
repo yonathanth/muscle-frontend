@@ -175,7 +175,7 @@ export default Login;
 //         {/* Action button */}
 //         <div className="flex justify-center">
 //           <Link href="/">
-//             <button className="bg-[#1ea7fd] text-black font-semibold px-6 py-2 rounded-full hover:bg-[#1483c4] transition">
+//             <button className="bg-customBlue text-black font-semibold px-6 py-2 rounded-full hover:bg-customHoverBlue transition">
 //               Back to Home{" "}
 //             </button>
 //           </Link>

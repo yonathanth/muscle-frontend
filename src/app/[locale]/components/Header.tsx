@@ -16,7 +16,7 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="bg-transparent p-6 text-white flex items-center justify-between px-8 max-w-screen-xl mx-auto absolute top-0 left-0 right-0 z-10 font-jost">
+    <header className="bg-transparent p-6 text-white flex items-center justify-between px-8 md:px-20 mx-auto absolute top-0 left-0 right-0 z-10 font-jost">
       <div className="w-40">
         <Link href="/">
           <Image src={logo} alt="logo" className="" />
@@ -84,16 +84,16 @@ const Header: React.FC = () => {
             <Link href="/services">{t("home_Page.nav.links.2")}</Link>
             <span className="absolute left-1/2 bottom-0 transform -translate-x-1/2 h-[2px] w-0 bg-[#871818] transition-all duration-300 group-hover:w-8"></span>
           </li>
-          <li className="cursor-pointer relative group">
+          {/* <li className="cursor-pointer relative group">
             <Link href="/Shop">{t("home_Page.nav.links.3")}</Link>
             <span className="absolute left-1/2 bottom-0 transform -translate-x-1/2 h-[2px] w-0 bg-[#871818] transition-all duration-300 group-hover:w-8"></span>
-          </li>
+          </li> */}
           <li className="cursor-pointer relative group">
             <Link href="/Contact">{t("home_Page.nav.links.4")}</Link>
             <span className="absolute left-1/2 bottom-0 transform -translate-x-1/2 h-[2px] w-0 bg-[#871818] transition-all duration-300 group-hover:w-8"></span>
           </li>
           <li className="lg:hidden cursor-pointer relative group">
-            <LanguageSwitcher />
+            {/* <LanguageSwitcher /> */}
           </li>
           {/* Sign-up Button in Mobile Menu */}
           <li className="mt-4 md:hidden">
@@ -109,7 +109,7 @@ const Header: React.FC = () => {
 
       {/* Sign-up and Login Buttons for Desktop */}
       <div className="hidden lg:flex">
-        <LanguageSwitcher />
+        {/* <LanguageSwitcher /> */}
         <Link href="/Register">
           {" "}
           <button className={`${styles.customButton} `}>

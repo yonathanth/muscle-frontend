@@ -41,7 +41,7 @@ const OurServices = () => {
       animate={isInView ? { opacity: 1 } : {}}
       transition={{ duration: 1 }}
     >
-      <div className="container mx-auto">
+      <div className="container mx-auto max-w-7xl">
         <Link href="/services">
           <h2 className="text-6xl font-bold text-[#871818] mb-4">
             {t("servicesSection.title")}

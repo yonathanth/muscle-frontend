@@ -4,7 +4,6 @@ import axios from "axios";
 import SmallLoading from "./SmallLoading";
 const NEXT_PUBLIC_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-
 interface Service {
   id: string;
   name: string;
@@ -25,10 +24,10 @@ const AddAdmin = ({ setShowModal, fetchData }: AddAdminProps) => {
   const [formData, setFormData] = useState({
     fullName: "",
     phoneNumber: "",
-    password: "",
+    password: "mf1234",
     email: "",
-    address: "",
-    dob: "",
+    address: "Addis Ababa",
+    dob: "2025-05-17",
     emergencyContact: "",
     gender: "",
     profileImage: null as string | File | null,
@@ -56,7 +55,9 @@ const AddAdmin = ({ setShowModal, fetchData }: AddAdminProps) => {
 
   const fetchServices = async () => {
     try {
-      const response = await axios.get(`${NEXT_PUBLIC_API_BASE_URL}/api/services`);
+      const response = await axios.get(
+        `${NEXT_PUBLIC_API_BASE_URL}/api/services`
+      );
       setServices(response.data.data);
     } catch {
       setError("Failed to fetch services.");
@@ -154,6 +155,13 @@ const AddAdmin = ({ setShowModal, fetchData }: AddAdminProps) => {
       );
 
       if (response.status === 201) {
+        // Reset pagination and search terms before fetching
+        const searchParams = new URLSearchParams(window.location.search);
+        searchParams.set("page", "1");
+        searchParams.delete("searchTerm");
+        searchParams.delete("statusFilter");
+        window.history.pushState({}, "", `?${searchParams.toString()}`);
+
         fetchData();
         router.push("/en/admin/gym-member");
         setShowModal(false);
@@ -211,7 +219,7 @@ const AddAdmin = ({ setShowModal, fetchData }: AddAdminProps) => {
               required
             />
           </div>
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <label className="block text-sm">Password</label>
             <input
               type="password"
@@ -221,8 +229,8 @@ const AddAdmin = ({ setShowModal, fetchData }: AddAdminProps) => {
               className="w-full p-2 rounded mt-1 bg-[#222] text-white"
               required
             />
-          </div>
-          <div className="mb-4">
+          </div> */}
+          {/* <div className="mb-4">
             <label className="block text-sm">Address</label>
             <input
               type="text"
@@ -232,8 +240,8 @@ const AddAdmin = ({ setShowModal, fetchData }: AddAdminProps) => {
               className="w-full p-2 rounded mt-1 bg-[#222] text-white"
               required
             />
-          </div>
-          <div className="mb-4">
+          </div> */}
+          {/* <div className="mb-4">
             <label className="block text-sm">Email</label>
             <input
               type="text"
@@ -243,8 +251,8 @@ const AddAdmin = ({ setShowModal, fetchData }: AddAdminProps) => {
               className="w-full p-2 rounded mt-1 bg-[#222] text-white"
               required
             />
-          </div>
-          <div className="mb-4">
+          </div> */}
+          {/* <div className="mb-4">
             <label className="block text-sm">Date of Birth</label>
             <input
               type="date"
@@ -254,7 +262,7 @@ const AddAdmin = ({ setShowModal, fetchData }: AddAdminProps) => {
               className="w-full p-2 rounded mt-1 bg-[#222] text-white"
               required
             />
-          </div>
+          </div> */}
           <div className="mb-4">
             <label className="block text-sm">Emergency Contact</label>
             <input
@@ -313,7 +321,7 @@ const AddAdmin = ({ setShowModal, fetchData }: AddAdminProps) => {
               className="w-full p-2 rounded mt-1 bg-[#222] text-white"
             />
           </div>
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <label className="block text-sm">Height</label>
             <input
               name="height"
@@ -420,10 +428,10 @@ const AddAdmin = ({ setShowModal, fetchData }: AddAdminProps) => {
                 className=" p-2 rounded mt-1 bg-[#222] text-white"
               />
             </div>
-          </div>
+          </div> */}
 
           {/* Health Conditions: Text Inputs */}
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <label className="block text-sm">Chronic Diseases</label>
             <input
               type="text"
@@ -442,7 +450,7 @@ const AddAdmin = ({ setShowModal, fetchData }: AddAdminProps) => {
               onChange={handleHealthConditionTextChange}
               className="w-full p-2 rounded mt-1 bg-[#222] text-white"
             />
-          </div>
+          </div> */}
           {/* Submit and Cancel Buttons */}
           <div className="flex justify-end space-x-4 mb-4">
             <button

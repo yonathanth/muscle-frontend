@@ -47,7 +47,7 @@ const Hero = () => {
           backgroundRepeat: "no-repeat",
         }}
       >
-        <div className="container mx-auto px-4 md:px-6 sm:pl-4">
+        <div className="container mx-auto px-4 md:px-10 sm:pl-4">
           <motion.div
             className="lg:w-1/2  sm:w-full px-[2.5rem] text-white"
             initial={{ opacity: 0, y: 50 }}
@@ -73,11 +73,10 @@ const Hero = () => {
             >
               {t("heroSection.subtitle")}
             </motion.p>
-            <Link
-              href="/Register"
-              className="button-custom text-xl text-[#871818] border border-solid border-[#871818] rounded-md px-5 py-1"
-            >
-              <span>{t("heroSection.ctaButton")}</span>
+            <Link href="/Register" className={`${styles.customButton} w-full `}>
+              <span className="mx-8 my-12 text-lg text-white">
+                {t("heroSection.ctaButton")}
+              </span>
             </Link>
           </motion.div>
         </div>

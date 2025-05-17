@@ -89,7 +89,7 @@ const ResponsiveModal: React.FC = () => {
       {hasRequested && (
         <button
           onClick={() => setIsPaymentModalOpen((prev) => !prev)}
-          className="absolute top-6 right-6 bg-[#1ea7fd] text-black font-semibold px-4 py-2 rounded-full hover:bg-[#1483c4] transition z-50"
+          className="absolute top-6 right-6 bg-customBlue text-black font-semibold px-4 py-2 rounded-full hover:bg-customHoverBlue transition z-50"
         >
           Payment Options
         </button>
@@ -114,7 +114,7 @@ const ResponsiveModal: React.FC = () => {
         <div className="flex justify-center">
           {!hasRequested && (
             <button
-              className="bg-[#1ea7fd] text-black font-semibold px-4 py-2 rounded-full hover:bg-[#1483c4] transition"
+              className="bg-customBlue text-black font-semibold px-4 py-2 rounded-full hover:bg-customHoverBlue transition"
               onClick={() => setIsoOpen(true)}
             >
               Extend your subscription

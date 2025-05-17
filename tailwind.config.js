@@ -38,7 +38,7 @@ module.exports = {
       },
       colors: {
         customBlue: "#871818",
-        customHoverBlue: "#2595bedb",
+        customHoverBlue: "#411111",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {

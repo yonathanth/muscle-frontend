@@ -35,11 +35,6 @@ const Footer: React.FC = () => {
               <h2 className="font-bold">{t("support.title")}</h2>
               <ul className="mt-6 space-y-2">
                 <li className="cursor-pointer">
-                  <Link href="/#bmi" className="hover:underline">
-                    {t("support.links.0")}
-                  </Link>
-                </li>
-                <li className="cursor-pointer">
                   <Link href="/Contact#address" className="hover:underline">
                     {t("support.links.1")}
                   </Link>
