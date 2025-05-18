@@ -48,7 +48,7 @@ const RegisterForm = () => {
     }));
   };
   const handlehealthConditionTextChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> // abe
   ) => {
     const { name, value } = e.target;
 
