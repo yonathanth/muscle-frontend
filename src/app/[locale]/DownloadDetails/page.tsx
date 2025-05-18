@@ -1,6 +1,6 @@
 "use client";
 import axios from "axios";
-import jsPDF from "jspd";
+import jsPDF from "jspdf";
 import React from "react";
 
 const NEXT_PUBLIC_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
