@@ -89,7 +89,7 @@ const Hero = () => {
             transition={{ duration: 1.2, ease: "easeOut" }}
           >
             <motion.h1
-              className="text-4xl  text-nowrap sm:text-5xl font-bold mb-6 "
+              className="text-4xl   sm:text-5xl font-bold mb-6 "
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2, duration: 1, ease: "easeOut" }}
