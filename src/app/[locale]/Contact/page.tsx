@@ -106,7 +106,7 @@ const Contact = () => {
                   <h3 className="text-lg font-semibold text-customBlue">
                     {t("details.email.label")}
                   </h3>
-                  <p className="text-white">musclefitness.Addis@gmail.com</p>
+                  <p className="text-white">musclefitnessaddis@gmail.com</p>
                 </div>
               </div>
             </div>

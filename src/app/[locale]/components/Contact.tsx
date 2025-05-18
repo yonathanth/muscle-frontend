@@ -51,7 +51,7 @@ const Branches = () => {
                 className="text-customBlue text-2xl mr-3"
               />
               <p className="text-gray-200 text-base sm:text-xl">
-                musclefitness@gmail.com
+                musclefitnessaddis@gmail.com
               </p>
             </div>
             <div className="flex sm:justify-end items-center">
