@@ -1,0 +1,47 @@
+name: Deploy Musclefront
+
+on:
+  push:
+    branches:
+      - staging
+      - master
+
+jobs:
+  deploy_qa:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Connect with VPS
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            mkdir -p apps/musclefront && cd apps/musclefront
+            
+            if [ -d ".git" ]; then
+              git stash
+              git pull origin master
+            else
+              git clone -b master https://github.com/yonathanth/muscle-frontend.git .
+            fi
+            
+            npm install --force
+            npm run build
+
+            pid=$(pm2 pid "muscle-frontend" 2>/dev/null)
+            if [ -n "$pid" ]; then
+              echo "Reloading muscle-frontend"
+              pm2 reload "muscle-frontend"
+              pm2 save
+            else
+              echo "New application"
+              pm2 start npm --name "muscle-frontend" -- start
+              pm2 startup
+              pm2 save
+            fi
