@@ -40,7 +40,7 @@ const Branches = () => {
         {/* Heading Section - Side by side */}
         <div className="flex flex-col  lg:flex-row items-start justify-between gap-6 mb-12 md:mb-24">
           <div className="lg:w-1/2">
-            <h2 className="text-4xl leading-snug md:text-5xl font-bold text-wrap">
+            <h2 className="text-3xl leading-snug md:text-4xl font-bold text-wrap">
               Find Your Nearest <br /> Muscle Fitness
             </h2>
           </div>
@@ -50,7 +50,7 @@ const Branches = () => {
                 icon={faEnvelope}
                 className="text-customBlue text-2xl mr-3"
               />
-              <p className="text-gray-200 text-lg sm:text-2xl">
+              <p className="text-gray-200 text-base sm:text-xl">
                 musclefitness@gmail.com
               </p>
             </div>
@@ -59,7 +59,7 @@ const Branches = () => {
                 icon={faPhoneAlt}
                 className="text-customBlue text-2xl mr-3"
               />
-              <p className="text-gray-200 text-lg sm:text-2xl">0945511884</p>
+              <p className="text-gray-200 text-base sm:text-xl">0945511884</p>
             </div>
           </div>
         </div>

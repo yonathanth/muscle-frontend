@@ -17,6 +17,8 @@ import after3 from "@/assets/images/after3.jpg";
 import before4 from "@/assets/images/before4.jpg";
 import before1 from "@/assets/images/before.jpg";
 import after4 from "@/assets/images/after4.jpg";
+import aboutImage3 from "@/assets/images/image 3.png";
+
 import { useTranslations } from "next-intl";
 
 const Testimonials: React.FC = () => {
@@ -25,26 +27,26 @@ const Testimonials: React.FC = () => {
     {
       description: t("testimonials.0.quote"),
       name: t("testimonials.0.name"),
-      beforeImage: before1,
-      afterImage: after1,
+      beforeImage: aboutImage3,
+      afterImage: aboutImage3,
     },
     {
       description: t("testimonials.1.quote"),
       name: t("testimonials.1.name"),
-      beforeImage: before2,
-      afterImage: after2,
+      beforeImage: aboutImage3,
+      afterImage: aboutImage3,
     },
     {
       description: t("testimonials.2.quote"),
       name: t("testimonials.2.name"),
-      beforeImage: before3,
-      afterImage: after3,
+      beforeImage: aboutImage3,
+      afterImage: aboutImage3,
     },
     {
       description: t("testimonials.3.quote"),
       name: t("testimonials.3.name"),
-      beforeImage: before4,
-      afterImage: after4,
+      beforeImage: aboutImage3,
+      afterImage: aboutImage3,
     },
   ];
 

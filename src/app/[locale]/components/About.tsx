@@ -25,7 +25,7 @@ const About = () => {
                 className="relative w-full h-[50vh] lg:h-auto rounded-tl-[164px] rounded-br-[6px] rounded-bl-[6px] bg-black rounded-xl overflow-hidden"
               >
                 <Image
-                  src={aboutImage1}
+                  src={aboutImage3}
                   alt="About Us Hero"
                   className="object-cover opacity-80"
                   layout="fill"
@@ -38,7 +38,7 @@ const About = () => {
             <div className="lg:w-1/2 lg:pl-12 mr-0 lg:text-start sm:text-start lg:mr-16 flex flex-col justify-between">
               <div>
                 <Link href="/about">
-                  <h2 className="text-6xl font-bold py-5 text-customBlue block">
+                  <h2 className="text-4xl sm:text-6xl font-bold py-5 text-customBlue block">
                     {t("aboutSection.title")}{" "}
                     {/* Use the correct translation key */}
                   </h2>
@@ -51,7 +51,7 @@ const About = () => {
               <div className="flex space-x-6 h-full">
                 <Link href="/about" className="w-1/2 h-full flex items-center">
                   <Image
-                    src={aboutImage2}
+                    src={aboutImage3}
                     alt="About Image 2"
                     className="opacity-80 rounded-[6px] w-full h-full object-cover transition-transform transform hover:scale-105"
                   />

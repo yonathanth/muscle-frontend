@@ -17,7 +17,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   isFromAdmin,
   title,
   price,
-  benefits,
+  benefits = [],
   isPremium,
   isPerDay,
   onClick,
@@ -42,21 +42,24 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
           {price}
         </p>
         <div className="space-y-4 pt-9">
-          {benefits.map((benefit, index) => (
-            <div key={index} className="flex items-start space-x-2 text-left">
-              <FontAwesomeIcon
-                icon={faCheck}
-                className={`text-[#871818] w-5 h-5 ${
-                  isPremium ? "text-black" : "text-[#871818]"
-                }`}
-              />
-              <p
-                className={`${isPremium ? "text-[#000000]" : "text-gray-400"}`}
-              >
-                {benefit}
-              </p>
-            </div>
-          ))}
+          {Array.isArray(benefits) &&
+            benefits.map((benefit, index) => (
+              <div key={index} className="flex items-start space-x-2 text-left">
+                <FontAwesomeIcon
+                  icon={faCheck}
+                  className={`text-[#871818] w-5 h-5 ${
+                    isPremium ? "text-black" : "text-[#871818]"
+                  }`}
+                />
+                <p
+                  className={`${
+                    isPremium ? "text-[#000000]" : "text-gray-400"
+                  }`}
+                >
+                  {benefit}
+                </p>
+              </div>
+            ))}
         </div>
       </div>
       {!isFromAdmin && (

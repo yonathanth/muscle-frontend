@@ -19,7 +19,7 @@ const Header: React.FC = () => {
     <header className="bg-transparent p-2 md:p-0 text-white flex items-center justify-between px-8 md:px-20 mx-auto absolute top-0 left-0 right-0 z-10 font-jost">
       <div className="sm:w-24 w-14 h-14 sm:h-24 flex items-center justify-center">
         <Link href="/">
-          <Image src={logo} alt="logo" className="sm:w-24 w-14 h-14 sm:h-24" />
+          <Image src={logo} alt="logo" className="sm:w-20 w-14 h-14 sm:h-20" />
         </Link>
       </div>
 
@@ -97,12 +97,16 @@ const Header: React.FC = () => {
           </li>
           {/* Sign-up Button in Mobile Menu */}
           <li className="mt-4 md:hidden">
-            <button className={`${styles.customButton} w-full`}>
-              <Link href="/Register">{t("home_Page.nav.links.5")}</Link>
-            </button>
-            <button className="bg-black text-customBlue w-full py-2 rounded-br-[1rem] hover:translate-y-1">
-              <Link href="/Login">{t("home_Page.nav.links.6")}</Link>
-            </button>
+            <Link href="/Register">
+              <button className={`${styles.customButton} w-full`}>
+                {t("home_Page.nav.links.5")}
+              </button>
+            </Link>
+            <Link href="/Login">
+              <button className="bg-black text-customBlue w-full py-2 rounded-br-[1rem] hover:translate-y-1">
+                {t("home_Page.nav.links.6")}
+              </button>
+            </Link>
           </li>
         </ul>
       </nav>

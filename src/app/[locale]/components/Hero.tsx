@@ -13,7 +13,7 @@ const Hero = () => {
   const animationRef = useRef<{ [key: string]: NodeJS.Timeout }>({});
 
   useEffect(() => {
-    const membersTarget = 300;
+    const membersTarget = 700;
     const servicesTarget = 5;
     const locationsTarget = 4;
 
@@ -26,7 +26,7 @@ const Hero = () => {
   }, []);
 
   useEffect(() => {
-    const membersTarget = 300;
+    const membersTarget = 700;
     const servicesTarget = 5;
     const locationsTarget = 4;
 
@@ -57,7 +57,7 @@ const Hero = () => {
     };
 
     // Start all counters
-    startCounter(membersTarget, setMembersCount, 10, "members");
+    startCounter(membersTarget, setMembersCount, 5, "members");
     startCounter(servicesTarget, setServicesCount, 200, "services");
     startCounter(locationsTarget, setLocationsCount, 250, "locations");
 
@@ -83,7 +83,7 @@ const Hero = () => {
       >
         <div className="container  px-1 sm:px-4  md:px-10 sm:pl-4 flex-grow flex items-center">
           <motion.div
-            className="lg:w-1/2 sm:w-full px-[2.5rem] text-white"
+            className="lg:w-1/2 sm:w-full px-[1rem] sm:px-[2.5rem] text-white"
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2, ease: "easeOut" }}
@@ -108,7 +108,7 @@ const Hero = () => {
               {t("heroSection.subtitle")}
             </motion.p>
             <Link href="/Register" className={`${styles.customButton} w-full `}>
-              <span className="mx-8 my-12 text-base sm:text-lg text-white">
+              <span className="mx-1 sm:mx-8 my-12 text-base sm:text-lg text-white">
                 {t("heroSection.ctaButton")}
               </span>
             </Link>

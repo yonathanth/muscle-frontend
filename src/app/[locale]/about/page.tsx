@@ -155,7 +155,7 @@ const AboutUsPage = () => {
               transition={{ duration: 0.8 }}
             >
               <Image
-                src={ourPhilo}
+                src={aboutUsHero}
                 alt="Our Philosophy"
                 layout="fill"
                 objectFit="cover"
@@ -234,7 +234,7 @@ const AboutUsPage = () => {
               transition={{ duration: 0.8 }}
             >
               <Image
-                src={trainers}
+                src={aboutUsHero}
                 alt="Our Facilities"
                 objectFit="cover"
                 className="rounded-lg"

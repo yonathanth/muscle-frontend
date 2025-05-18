@@ -18,12 +18,12 @@ const services = [
   {
     key: "aerobics", // Add a key for referencing the translation
     icon: "running",
-    imageSrc: Service2,
+    imageSrc: Service1,
   },
   {
     key: "personalTraining", // Add a key for referencing the translation
     icon: "user",
-    imageSrc: Service3,
+    imageSrc: Service1,
   },
 ];
 
@@ -43,7 +43,7 @@ const OurServices = () => {
     >
       <div className="container mx-auto max-w-7xl">
         <Link href="/services">
-          <h2 className="text-6xl font-bold text-[#871818] mb-4">
+          <h2 className="text-4xl sm:text-6xl font-bold text-[#871818] mb-4">
             {t("servicesSection.title")}
           </h2>
         </Link>
