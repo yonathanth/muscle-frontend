@@ -18,6 +18,7 @@ interface GymMember {
 
 const GymAttendanceList = () => {
   const router = useRouter();
+  const token = localStorage.getItem("token");
 
   const [members, setMembers] = useState<GymMember[]>([]);
   const searchParams = useSearchParams();
@@ -26,8 +27,8 @@ const GymAttendanceList = () => {
     searchParams.get("searchTerm") || ""
   );
   const [selectedDate, setSelectedDate] = useState(
-    searchParams.get("date") || new Date().toISOString().split("T")[0]
-  ); // Default to today
+    searchParams.get("date") || new Date().toLocaleDateString("en-CA") // Use YYYY-MM-DD format
+  );
 
   const [loading, setLoading] = useState(true);
 
@@ -35,8 +36,15 @@ const GymAttendanceList = () => {
     const fetchAttendance = async () => {
       try {
         setLoading(true);
+        // Convert local date to UTC for API request
+        const utcDate = new Date(selectedDate + "T00:00:00");
         const response = await axios.get(
-          `${NEXT_PUBLIC_API_BASE_URL}/api/attendance?date=${selectedDate}`
+          `${NEXT_PUBLIC_API_BASE_URL}/api/attendance?date=${utcDate.toISOString()}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
 
         // Ensure response is an array
@@ -147,7 +155,12 @@ const GymAttendanceList = () => {
                   <td className="px-6 py-2">{member.status}</td>
                   <td className="px-6 py-2">{member.daysLeft}</td>
                   <td className="px-6 py-2">
-                    {new Date(member.startDate).toLocaleDateString()}
+                    {new Date(member.startDate).toLocaleDateString("en-US", {
+                      timeZone: "UTC",
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                    })}
                   </td>
                 </tr>
               ))

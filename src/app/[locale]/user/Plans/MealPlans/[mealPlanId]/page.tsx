@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React, { useCallback, useEffect, useState } from "react";
 import LoadingPage from "../../../loading";
 import { MealPlanType, MealType } from "../../Meals/page";
@@ -12,13 +12,17 @@ const NEXT_PUBLIC_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 interface UserMealPlanType {
   id: string;
   userId: string;
-  mealPlanId: string
+  mealPlanId: string;
   startedAt: Date;
   progress: number;
-  finishedAt: Date
+  finishedAt: Date;
 }
 
-export default function PlanDetails({ params }: { params: { locale: string; mealPlanId: string } }) {
+export default function PlanDetails({
+  params,
+}: {
+  params: { locale: string; mealPlanId: string };
+}) {
   const searchParams = useSearchParams();
   const userId = searchParams.get("userId");
   const [plan, setPlan] = useState<MealPlanType | null>(null);
@@ -27,55 +31,82 @@ export default function PlanDetails({ params }: { params: { locale: string; meal
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
   const [isModalOpen, setModalOpen] = useState(false);
   const [doesMealPlanExist, setDoesMealPlanExist] = useState(true);
+  const token = localStorage.getItem("token");
 
-
-  const doesMealPlanExistForUser = useCallback(async (mealPlanId: string, userId: string) => {
-    try {
-      const response = await axios.get(`${NEXT_PUBLIC_API_BASE_URL}/api/members/${userId}`);
-      const userData = response.data.data.user;
-      if (!userData || !Array.isArray(userData.mealPlans)) {
-        throw new Error("MealPlans section not found or invalid.");
+  const doesMealPlanExistForUser = useCallback(
+    async (mealPlanId: string, userId: string) => {
+      try {
+        const response = await axios.get(
+          `${NEXT_PUBLIC_API_BASE_URL}/api/members/${userId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const userData = response.data.data.user;
+        if (!userData || !Array.isArray(userData.mealPlans)) {
+          throw new Error("MealPlans section not found or invalid.");
+        }
+        const exists = userData.mealPlans.some(
+          (mealPlan: UserMealPlanType) => mealPlan.mealPlanId === mealPlanId
+        );
+        setDoesMealPlanExist(exists);
+        return exists;
+      } catch (error) {
+        setDoesMealPlanExist(false);
       }
-      const exists = userData.mealPlans.some((mealPlan: UserMealPlanType) => mealPlan.mealPlanId === mealPlanId);
-      setDoesMealPlanExist(exists);
-      return exists;
-    } catch (error) {
-      setDoesMealPlanExist(false);
-    }
-  }, []);
+    },
+    []
+  );
 
   const selectPlan = async (mealPlanId: string) => {
-    const res = await fetch(`${NEXT_PUBLIC_API_BASE_URL}/api/members/addUserMealPlan`, {
-      cache: "no-store", method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        userId: userId,
-        mealPlanId: mealPlanId
-      })
-    })
+    const res = await fetch(
+      `${NEXT_PUBLIC_API_BASE_URL}/api/members/addUserMealPlan`,
+      {
+        cache: "no-store",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          userId: userId,
+          mealPlanId: mealPlanId,
+        }),
+      }
+    );
     if (!res.ok) {
-      throw new Error(`Failed to select plan ${res.statusText}`)
+      throw new Error(`Failed to select plan ${res.statusText}`);
     }
     setDoesMealPlanExist(true);
-  }
+  };
 
   const getMealPlan = useCallback(async (id: string) => {
     try {
       setIsLoading(true);
-      const res = await fetch(`${NEXT_PUBLIC_API_BASE_URL}/api/mealPlans/${id}`, { cache: "no-store" });
+      const res = await fetch(
+        `${NEXT_PUBLIC_API_BASE_URL}/api/mealPlans/${id}`,
+        {
+          cache: "no-store",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (!res.ok) {
         throw new Error(`Failed to fetch meal plan: ${res.statusText}`);
       }
       const data = await res.json();
       setPlan(data.data.mealPlan);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An unknown error occurred");
+      setError(
+        err instanceof Error ? err.message : "An unknown error occurred"
+      );
     } finally {
       setIsLoading(false);
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -97,24 +128,22 @@ export default function PlanDetails({ params }: { params: { locale: string; meal
 
   if (!plan) return <LoadingPage />;
 
-
-  let totalCalories = 0
-  let totalProteins = 0
-  let totalCarbs = 0
-  let totalFat = 0
+  let totalCalories = 0;
+  let totalProteins = 0;
+  let totalCarbs = 0;
+  let totalFat = 0;
   plan.meals.forEach((meal) => {
-    totalProteins += meal.protein ? meal.protein : 0
-    totalFat += meal.fats ? meal.fats : 0
-    totalCarbs += meal.carbs ? meal.carbs : 0
-    totalCalories += meal.calories ? meal.calories : 0
+    totalProteins += meal.protein ? meal.protein : 0;
+    totalFat += meal.fats ? meal.fats : 0;
+    totalCarbs += meal.carbs ? meal.carbs : 0;
+    totalCalories += meal.calories ? meal.calories : 0;
   });
 
   const groupedMealsByCategory = (meals: MealType[]) => {
-    const grouped: Record<MealCategory, MealType[]> =
-    {
+    const grouped: Record<MealCategory, MealType[]> = {
       breakfast: [],
       lunch: [],
-      dinner: []
+      dinner: [],
     };
     meals.forEach((meal: MealType) => {
       // @ts-ignore
@@ -129,9 +158,7 @@ export default function PlanDetails({ params }: { params: { locale: string; meal
   const groupedMeals = groupedMealsByCategory(plan.meals);
 
   if (isLoading) {
-    return (
-      <LoadingPage />
-    );
+    return <LoadingPage />;
   }
 
   if (error) {
@@ -173,8 +200,9 @@ export default function PlanDetails({ params }: { params: { locale: string; meal
             {/* Image component with layout 'fill' */}
             <div className="relative w-full h-full">
               <Image
-                src={`${NEXT_PUBLIC_API_BASE_URL}/uploads/mealPlans/${plan ? plan.slug : ""
-                  }`}
+                src={`${NEXT_PUBLIC_API_BASE_URL}/uploads/mealPlans/${
+                  plan ? plan.slug : ""
+                }`}
                 alt={plan ? plan.name : ""}
                 className="rounded-lg"
                 fill
@@ -191,7 +219,9 @@ export default function PlanDetails({ params }: { params: { locale: string; meal
           <div className="bg-[#252525] p-4 rounded-lg mt-2 lg:mt-2">
             <h2 className="text-base font-semibold">{plan.mainGoal}</h2>
             <div className="mt-4">
-              <h3 className="text-sm text-white font-semibold py-2">Daily Goal</h3>
+              <h3 className="text-sm text-white font-semibold py-2">
+                Daily Goal
+              </h3>
               <div className="space-y-2 font-extralight">
                 <p className="flex text-tiny justify-between">
                   Protein <span>{totalProteins} g</span>
@@ -217,49 +247,62 @@ export default function PlanDetails({ params }: { params: { locale: string; meal
             >
               Select Plan
             </button>
-          ) : <div className="text-sm">Added to Your Plans!</div>}
+          ) : (
+            <div className="text-sm">Added to Your Plans!</div>
+          )}
         </div>
-
 
         {/* Center Schedule */}
         <div className="">
-      <div className="bg-[#1C1C1C] p-3 rounded-lg h-[29.5rem] overflow-y-auto">
-        <ul className="text-xs space-y-2">
-          {Array.from({ length: Math.ceil(plan.duration / 4) }).map((_, monthIndex) => (
-            <li className="cursor-pointer hover:bg-[#333333] p-2 rounded-md" key={monthIndex}>
-              Month {monthIndex + 1}
-              <ul className="pl-4 mt-2">
-                {Array.from({ length: 4 }).map((_, weekIndex) => (
-                  <li className="cursor-pointer hover:bg-[#444444] focus:bg-[#444444] p-2 rounded-md" key={weekIndex}>
-                    Week {weekIndex + 1}
-                    <ul className="pl-4 mt-2 flex flex-col">
-                      {Array.from({ length: 7 }).map((_, dayIndex) => {
-                        const uniqueDayIndex = `${monthIndex}-${weekIndex}-${dayIndex}`; // Unique identifier
-                        const isSelected = selectedDay === uniqueDayIndex;
+          <div className="bg-[#1C1C1C] p-3 rounded-lg h-[29.5rem] overflow-y-auto">
+            <ul className="text-xs space-y-2">
+              {Array.from({ length: Math.ceil(plan.duration / 4) }).map(
+                (_, monthIndex) => (
+                  <li
+                    className="cursor-pointer hover:bg-[#333333] p-2 rounded-md"
+                    key={monthIndex}
+                  >
+                    Month {monthIndex + 1}
+                    <ul className="pl-4 mt-2">
+                      {Array.from({ length: 4 }).map((_, weekIndex) => (
+                        <li
+                          className="cursor-pointer hover:bg-[#444444] focus:bg-[#444444] p-2 rounded-md"
+                          key={weekIndex}
+                        >
+                          Week {weekIndex + 1}
+                          <ul className="pl-4 mt-2 flex flex-col">
+                            {Array.from({ length: 7 }).map((_, dayIndex) => {
+                              const uniqueDayIndex = `${monthIndex}-${weekIndex}-${dayIndex}`; // Unique identifier
+                              const isSelected = selectedDay === uniqueDayIndex;
 
-                        return (
-                          <button
-                            key={dayIndex}
-                            className={`cursor-pointer p-2 rounded-md ${isSelected ? 'bg-[#555555]' : 'hover:bg-[#555555]'}`}
-                            onClick={() => {
-                              setSelectedDay(uniqueDayIndex);
-                            }}
-                          >
-                            <li>
-                              <div>Day {dayIndex + 1}</div>
-                            </li>
-                          </button>
-                        );
-                      })}
+                              return (
+                                <button
+                                  key={dayIndex}
+                                  className={`cursor-pointer p-2 rounded-md ${
+                                    isSelected
+                                      ? "bg-[#555555]"
+                                      : "hover:bg-[#555555]"
+                                  }`}
+                                  onClick={() => {
+                                    setSelectedDay(uniqueDayIndex);
+                                  }}
+                                >
+                                  <li>
+                                    <div>Day {dayIndex + 1}</div>
+                                  </li>
+                                </button>
+                              );
+                            })}
+                          </ul>
+                        </li>
+                      ))}
                     </ul>
                   </li>
-                ))}
-              </ul>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
+                )
+              )}
+            </ul>
+          </div>
+        </div>
         <div className="md:w-2/5 flex flex-col space-y-3">
           <h3 className="text-sm font-semibold">
             Week {selectedDay ? Number(selectedDay[2]) + 1 : ""} Day{" "}
@@ -272,15 +315,18 @@ export default function PlanDetails({ params }: { params: { locale: string; meal
                 .map(Number);
               return ["breakfast", "lunch", "dinner"].map((category, index) => {
                 const mealCategory = category as MealCategory; // Explicitly cast as MealCategory
-                const meal = groupedMeals[mealCategory][dayIndex % groupedMeals[mealCategory].length];
+                const meal =
+                  groupedMeals[mealCategory][
+                    dayIndex % groupedMeals[mealCategory].length
+                  ];
                 return (
                   <div
                     key={category}
-                    className={`relative px-4 py-8 rounded-lg shadow-lg flex flex-col space-y-4 ${index === 0 ? "bg-customBlue" : "bg-[#252525]"
-                      }`}
+                    className={`relative px-4 py-8 rounded-lg shadow-lg flex flex-col space-y-4 ${
+                      index === 0 ? "bg-customBlue" : "bg-[#252525]"
+                    }`}
                   >
-                    <span
-                      className="absolute top-0 left-0 bg-customBlue text-white text-sm px-6 py-1 border-r-[4px] border-b-[4px] border-black rounded-tl-md">
+                    <span className="absolute top-0 left-0 bg-customBlue text-white text-sm px-6 py-1 border-r-[4px] border-b-[4px] border-black rounded-tl-md">
                       {category.charAt(0).toUpperCase() + category.slice(1)}
                     </span>
 
@@ -288,22 +334,30 @@ export default function PlanDetails({ params }: { params: { locale: string; meal
                       <div className="flex justify-between items-center space-x-4">
                         <div className="p-2 mt-4">
                           <p className="flex text-sm justify-between">
-                            <span className="pr-5">Protein</span> <span>{meal.protein}g</span>
+                            <span className="pr-5">Protein</span>{" "}
+                            <span>{meal.protein}g</span>
                           </p>
                           <p className="flex text-sm justify-between">
-                            <span className="pr-5">Carbohydrate</span> <span>{meal.carbs}g</span>
+                            <span className="pr-5">Carbohydrate</span>{" "}
+                            <span>{meal.carbs}g</span>
                           </p>
                           <p className="flex text-sm justify-between">
-                            <span className="pr-5">Fat</span> <span>{meal.fats}g</span>
+                            <span className="pr-5">Fat</span>{" "}
+                            <span>{meal.fats}g</span>
                           </p>
                           <p className="text-xs font-extralight mt-4">
-                            Calories <span className="font-semibold">{meal.calories}</span> kcal
+                            Calories{" "}
+                            <span className="font-semibold">
+                              {meal.calories}
+                            </span>{" "}
+                            kcal
                           </p>
                         </div>
                         <div className="flex flex-col items-center">
                           <Image
-                            src={`${NEXT_PUBLIC_API_BASE_URL}/uploads/meals/${meal ? meal.slug : ""
-                              }`}
+                            src={`${NEXT_PUBLIC_API_BASE_URL}/uploads/meals/${
+                              meal ? meal.slug : ""
+                            }`}
                             width={500}
                             height={500}
                             quality={90}
@@ -314,17 +368,21 @@ export default function PlanDetails({ params }: { params: { locale: string; meal
                         </div>
                       </div>
                     ) : (
-                      <div className="text-gray-400 text-sm">This is your lucky meal! Eat whatever you want here.</div>
+                      <div className="text-gray-400 text-sm">
+                        This is your lucky meal! Eat whatever you want here.
+                      </div>
                     )}
                   </div>
                 );
               });
             })()
           ) : (
-            <div className="text-gray-400 text-sm">Select a day to view meals.</div>
+            <div className="text-gray-400 text-sm">
+              Select a day to view meals.
+            </div>
           )}
         </div>
       </div>
     </div>
   );
-};
+}

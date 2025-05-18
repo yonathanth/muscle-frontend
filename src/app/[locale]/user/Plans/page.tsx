@@ -20,7 +20,7 @@ export default function PlansPage() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [userId, setUserId] = useState<string>("");
-
+  const token = localStorage.getItem("token");
   const fetchData = useCallback(
     async (type: string) => {
       try {
@@ -31,18 +31,27 @@ export default function PlansPage() {
         if (type === "workouts") {
           res = await fetch(`${NEXT_PUBLIC_API_BASE_URL}/api/workouts/`, {
             cache: "no-store",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           });
           data = await res.json();
           return data.data.workouts || [];
         } else if (type === "mealPlans") {
           res = await fetch(`${NEXT_PUBLIC_API_BASE_URL}/api/mealPlans/`, {
             cache: "no-store",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           });
           data = await res.json();
           return data.data.mealPlans || [];
         } else if (type === "exerciseList") {
           res = await fetch(`${NEXT_PUBLIC_API_BASE_URL}/api/exercises/`, {
             cache: "no-store",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           });
           data = await res.json();
           console.log(data);
@@ -54,6 +63,9 @@ export default function PlansPage() {
         } else if (type === "mealList") {
           res = await fetch(`${NEXT_PUBLIC_API_BASE_URL}/api/meals/`, {
             cache: "no-store",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           });
           data = await res.json();
           if (!data.success) {

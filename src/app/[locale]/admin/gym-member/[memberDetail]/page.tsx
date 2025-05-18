@@ -112,7 +112,7 @@ const MemberDetails = ({
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   const [showEditForm, setShowEditForm] = useState<boolean>(false);
-
+  const token = localStorage.getItem("token");
   const [isZoomed, setIsZoomed] = useState<boolean>(false); // Define the isZoomed state
   const fetchMemberDetails = async () => {
     if (!id) return;
@@ -124,7 +124,12 @@ const MemberDetails = ({
 
     try {
       const response = await fetch(
-        `${NEXT_PUBLIC_API_BASE_URL}/api/memberManagement/${id}/profile`
+        `${NEXT_PUBLIC_API_BASE_URL}/api/memberManagement/${id}/profile`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       if (!response.ok) {
         throw new Error("Failed to fetch member details");
@@ -162,7 +167,13 @@ const MemberDetails = ({
 
       const response = await axios.post(
         `${NEXT_PUBLIC_API_BASE_URL}/api/attendance/${id}`,
-        { id: id }
+
+        { id: id },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       if (response.data.success) {
@@ -190,11 +201,12 @@ const MemberDetails = ({
     setIsModalLoading(true);
     try {
       const response = await fetch(
-        `${NEXT_PUBLIC_API_BASE_URL}/api/memberManagement/${id}`,
+        `${NEXT_PUBLIC_API_BASE_URL}/api/memberManagement/${id}/renew`,
         {
-          method: "PATCH",
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
         }
       );

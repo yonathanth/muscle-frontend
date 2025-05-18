@@ -7,7 +7,6 @@ import ConfirmDeleteModal from "../components/ConfirmDeleteModal"; // Import the
 import EditItemForm from "../components/EditItem";
 const NEXT_PUBLIC_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-
 interface StockItem {
   id: string;
   itemName: string;
@@ -32,10 +31,14 @@ const Stock: React.FC = () => {
 
   const [showDeleteModal, setShowDeleteModal] = useState(false); // State for showing delete modal
   const [itemToDelete, setItemToDelete] = useState<StockItem | null>(null); // Store item to delete
-
+  const token = localStorage.getItem("token");
   const fetchData = async () => {
     try {
-      const response = await fetch(`${NEXT_PUBLIC_API_BASE_URL}/api/stock`);
+      const response = await fetch(`${NEXT_PUBLIC_API_BASE_URL}/api/stock`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -67,9 +70,16 @@ const Stock: React.FC = () => {
     setIsLoading(true);
     if (itemToDelete) {
       try {
-        const response = await fetch(`${NEXT_PUBLIC_API_BASE_URL}/api/stock/${id}`, {
-          method: "DELETE",
-        });
+        const response = await fetch(
+          `${NEXT_PUBLIC_API_BASE_URL}/api/stock/${id}`,
+
+          {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         if (!response.ok) {
           throw new Error("Failed to delete the item");
         }
@@ -88,8 +98,12 @@ const Stock: React.FC = () => {
     try {
       const response = await fetch(
         `${NEXT_PUBLIC_API_BASE_URL}/api/stock/${id}/increaseQuantity`,
+
         {
           method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
       if (!response.ok) {
@@ -109,6 +123,9 @@ const Stock: React.FC = () => {
         `${NEXT_PUBLIC_API_BASE_URL}/api/stock/${id}/decreaseQuantity`,
         {
           method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
       if (!response.ok) {

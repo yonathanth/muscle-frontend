@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import SmallLoading from "./SmallLoading";
 const NEXT_PUBLIC_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-
 interface EditEmployeeModalProps {
   closeModal: () => void;
   updateMember: (updatedMember: Member) => Promise<void>;
@@ -33,6 +32,7 @@ const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({
 
   // Function to handle the form submission
   const handleEditEmployee = async () => {
+    const token = localStorage.getItem("token");
     if (name && phone && startDate && jobType) {
       const updatedMember: Member = {
         id: employee.id,
@@ -52,6 +52,7 @@ const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({
             method: "PATCH",
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify(updatedMember),
           }

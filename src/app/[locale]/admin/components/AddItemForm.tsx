@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import SmallLoading from "./SmallLoading";
 const NEXT_PUBLIC_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-
 interface AddItemFormProps {
   onAddItem: (item: {
     id: string;
@@ -22,6 +21,8 @@ const AddItemForm: React.FC<AddItemFormProps> = ({ onAddItem, onClose }) => {
   const [quantity, setQuantity] = useState(0);
   const [loading, setLoading] = useState(false); // Add loading state for better UX
 
+  const token = localStorage.getItem("token");
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!itemName || !category || quantity <= 0) return;
@@ -35,6 +36,7 @@ const AddItemForm: React.FC<AddItemFormProps> = ({ onAddItem, onClose }) => {
       const response = await fetch(`${NEXT_PUBLIC_API_BASE_URL}/api/stock`, {
         method: "POST",
         headers: {
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(newItem),

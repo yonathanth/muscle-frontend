@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import loginImage from "./login.jpeg";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { jwtDecode } from "jwt-decode";
@@ -24,11 +24,17 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // Loader state
+  const [isLoading, setIsLoading] = useState(false);
+  const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    // This will only run on client side after hydration
+    setToken(localStorage.getItem("token"));
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true); // Start loading
+    setIsLoading(true);
 
     const loginData = { phoneNumber, password };
 
@@ -37,7 +43,9 @@ const Login = () => {
         `${NEXT_PUBLIC_API_BASE_URL}/api/auth/login`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify(loginData),
         }
       );
@@ -45,15 +53,18 @@ const Login = () => {
       const data = await response.json();
 
       if (response.ok) {
-        localStorage.setItem("token", data.token);
-        const decodedToken = jwtDecode<CustomJwtPayload>(data.token);
+        // Store token in localStorage
+        if (typeof window !== "undefined") {
+          localStorage.setItem("token", data.token);
+        }
 
+        const decodedToken = jwtDecode<CustomJwtPayload>(data.token);
         const { role, status } = decodedToken;
 
         if (role === "admin") {
           router.push("/en/admin");
         } else if (role === "moderator") {
-          router.push("/en/attendance");
+          router.push("/en/admin");
         } else if (role === "root") {
           router.push("/en/admin");
         } else if (role === "user") {
@@ -63,6 +74,10 @@ const Login = () => {
             router.push("/en/pending-user");
           } else if (status === "dormant") {
             router.push("/en/dormant-user");
+          } else if (status === "expired") {
+            router.push("/en/user");
+          } else if (status === "active") {
+            router.push("/en/user");
           } else {
             router.push("/en/user");
           }
@@ -74,7 +89,7 @@ const Login = () => {
       console.error("Login error:", error);
       setErrorMessage("An error occurred. Please try again.");
     } finally {
-      setIsLoading(false); // Stop loading
+      setIsLoading(false);
     }
   };
 
@@ -149,40 +164,3 @@ const Login = () => {
 };
 
 export default Login;
-
-// import Link from "next/link";
-// import React from "react";
-
-// const ResponsiveModal: React.FC = () => {
-//   return (
-//     <div className="min-h-screen flex items-center justify-center bg-black px-4">
-//       {/* Modal container */}
-//       <div
-//         className="bg-[#121212] text-white rounded-lg p-6 w-full max-w-lg sm:max-w-lg lg:max-w-2xl shadow-md"
-//         style={{
-//           backdropFilter: "blur(10px)",
-//           border: "1px solid #fff",
-//         }}
-//       >
-//         {/* Modal title */}
-//         <h2 className="text-center text-lg font-semibold mb-4 text-customBlue">
-//           Feature not available for a while{" "}
-//         </h2>
-//         {/* Modal content */}
-//         <p className="text-sm text-center mb-6 leading-relaxed">
-//           please contanct the admin for more information.
-//         </p>
-//         {/* Action button */}
-//         <div className="flex justify-center">
-//           <Link href="/">
-//             <button className="bg-customBlue text-black font-semibold px-6 py-2 rounded-full hover:bg-customHoverBlue transition">
-//               Back to Home{" "}
-//             </button>
-//           </Link>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default ResponsiveModal;

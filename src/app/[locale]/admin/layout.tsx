@@ -32,7 +32,11 @@ export default function AdminLayout({
     if (token) {
       try {
         const decodedToken: DecodedToken = jwtDecode(token);
-        if (decodedToken.role === "admin" || decodedToken.role === "root") {
+        if (
+          decodedToken.role === "admin" ||
+          decodedToken.role === "moderator" ||
+          decodedToken.role === "root"
+        ) {
           setIsAuthorized(true);
         }
       } catch (error) {

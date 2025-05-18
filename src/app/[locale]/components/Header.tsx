@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import styles from "../styles/ButtonStyles.module.css";
 import Image from "next/image";
-import logo from "@/assets/logos/logo.svg";
+import logo from "@/assets/logos/logo (3).svg";
 import { Link } from "../../../i18n/routing";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { useTranslations } from "next-intl";
@@ -16,10 +16,10 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="bg-transparent p-6 text-white flex items-center justify-between px-8 md:px-20 mx-auto absolute top-0 left-0 right-0 z-10 font-jost">
-      <div className="w-40">
+    <header className="bg-transparent p-2 md:p-0 text-white flex items-center justify-between px-8 md:px-20 mx-auto absolute top-0 left-0 right-0 z-10 font-jost">
+      <div className="sm:w-24 w-14 h-14 sm:h-24 flex items-center justify-center">
         <Link href="/">
-          <Image src={logo} alt="logo" className="" />
+          <Image src={logo} alt="logo" className="sm:w-24 w-14 h-14 sm:h-24" />
         </Link>
       </div>
 

@@ -18,11 +18,17 @@ export function BarChartComponent() {
   const [selectedPeriod, setSelectedPeriod] = useState("Weekly");
   const [chartData, setChartData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const token = localStorage.getItem("token");
 
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        `${NEXT_PUBLIC_API_BASE_URL}/api/dashboard/attendanceData`
+        `${NEXT_PUBLIC_API_BASE_URL}/api/dashboard/attendanceData`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       if (response.data.success) {
         updateChartData(response.data.data);

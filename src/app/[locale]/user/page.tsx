@@ -36,7 +36,7 @@ const UserDashboard: React.FC = () => {
 
       if (role === "root") {
         setUserId(id); // Set userId here
-      } else if (role !== "user" || status !== "active") {
+      } else if (role !== "user" || !["active", "expired"].includes(status)) {
         router.push("/");
       } else {
         setUserId(id);

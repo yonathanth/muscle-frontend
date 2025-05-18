@@ -42,7 +42,7 @@ const Dashboard: React.FC<UserDashboardProps> = ({ userId }) => {
     null
   );
   const [todayPlans, setTodayPlans] = useState<string[]>([]);
-
+  const token = localStorage.getItem("token");
   const [workout, setWorkout] = useState<WorkoutPlanType | null>(null);
   const fetchAdvertisement = async () => {
     try {
@@ -50,6 +50,9 @@ const Dashboard: React.FC<UserDashboardProps> = ({ userId }) => {
       setError(null);
       const res = await fetch(`${NEXT_PUBLIC_API_BASE_URL}/api/advertisement`, {
         cache: "no-store",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       const data = await res.json();
       return data.data.advertisements[0] || [];
@@ -68,7 +71,12 @@ const Dashboard: React.FC<UserDashboardProps> = ({ userId }) => {
     try {
       const res = await fetch(
         ` ${NEXT_PUBLIC_API_BASE_URL}/api/memberManagement/${userId}/profile`,
-        { cache: "no-store" }
+        {
+          cache: "no-store",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       if (!res.ok) {
         if (res.status === 404) {
@@ -86,7 +94,12 @@ const Dashboard: React.FC<UserDashboardProps> = ({ userId }) => {
       if (user?.workouts?.[0]?.workoutId) {
         const workoutRes = await fetch(
           `${NEXT_PUBLIC_API_BASE_URL}/api/workouts/${user.workouts[0].workoutId}`,
-          { cache: "no-store" }
+          {
+            cache: "no-store",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         if (!workoutRes.ok) {
           throw new Error(`Workout fetch failed: ${workoutRes.statusText}`);
@@ -112,6 +125,9 @@ const Dashboard: React.FC<UserDashboardProps> = ({ userId }) => {
       setError(null);
       const res = await fetch(`${NEXT_PUBLIC_API_BASE_URL}/api/meals`, {
         cache: "no-store",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       const data = await res.json();
       const meals: MealType[] = data?.data?.meals;
@@ -133,7 +149,12 @@ const Dashboard: React.FC<UserDashboardProps> = ({ userId }) => {
     try {
       const res = await fetch(
         `${NEXT_PUBLIC_API_BASE_URL}/api/members/${userId}/getMyWorkouts`,
-        { cache: "no-store" }
+        {
+          cache: "no-store",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       if (!res.ok) {
         throw new Error(`Failed to fetch today's plans: ${res.statusText}`);

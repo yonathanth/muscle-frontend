@@ -43,12 +43,19 @@ const DashboardContent: React.FC = () => {
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const token = localStorage.getItem("token");
+
   // Fetch dashboard stats
   useEffect(() => {
     const fetchDashboardStats = async () => {
       try {
         const response = await axios.get(
-          `${NEXT_PUBLIC_API_BASE_URL}/api/dashboard/cardData`
+          `${NEXT_PUBLIC_API_BASE_URL}/api/dashboard/cardData`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         if (response.data.success) {
           setDashboardStats(response.data.data);
@@ -61,7 +68,12 @@ const DashboardContent: React.FC = () => {
     const fetchPendingMembers = async () => {
       try {
         const response = await axios.get(
-          `${NEXT_PUBLIC_API_BASE_URL}/api/dashboard/pendingMembers`
+          `${NEXT_PUBLIC_API_BASE_URL}/api/dashboard/pendingMembers`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         if (response.data.success) {
           setPendingMembers(response.data.data);
@@ -81,9 +93,15 @@ const DashboardContent: React.FC = () => {
     try {
       const response = await axios.put(
         `${NEXT_PUBLIC_API_BASE_URL}/api/memberManagement/${selectedMember.id}/status`,
+
         {
           status: "active",
           startDate: new Date(),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
@@ -93,7 +111,12 @@ const DashboardContent: React.FC = () => {
         );
 
         const statsResponse = await axios.get(
-          `${NEXT_PUBLIC_API_BASE_URL}/api/dashboard/cardData`
+          `${NEXT_PUBLIC_API_BASE_URL}/api/dashboard/cardData`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         if (statsResponse.data.success) {
           setDashboardStats(statsResponse.data.data);

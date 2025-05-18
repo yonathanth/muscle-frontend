@@ -39,6 +39,7 @@ const EditServiceModal: React.FC<EditServiceModalProps> = ({
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
+  const token = localStorage.getItem("token");
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -65,7 +66,12 @@ const EditServiceModal: React.FC<EditServiceModalProps> = ({
       const response = await axios.patch(
         `${NEXT_PUBLIC_API_BASE_URL}/api/services/${editedService.id}`,
         sanitizedService,
-        { headers: { "Content-Type": "application/json" } }
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       onSave(response.data.data);
     } catch (error) {

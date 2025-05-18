@@ -44,12 +44,20 @@ const Employee = () => {
   const [memberToDelete, setMemberToDelete] = useState<Member | null>(null);
   const [modalError, setModalError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false); // Add this state
+  const token = localStorage.getItem("token");
 
   // Fetch employees from backend
   const fetchEmployees = useCallback(async () => {
     try {
       console.log("Fetching employees...");
-      const response = await fetch(NEXT_PUBLIC_API_BASE_URL + "/api/employees/");
+      const response = await fetch(
+        NEXT_PUBLIC_API_BASE_URL + "/api/employees/",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       const data = await response.json();
       console.log("Fetched data:", data);
       if (data.success && Array.isArray(data.data)) {
@@ -108,6 +116,9 @@ const Employee = () => {
         `${NEXT_PUBLIC_API_BASE_URL}/api/employees/${memberToDelete.id}`,
         {
           method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
       const data = await response.json();

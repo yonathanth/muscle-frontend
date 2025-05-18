@@ -43,6 +43,7 @@ const Orders: React.FC = () => {
     setOrdertoDelete(order);
     setIsDeleteModalOpen(true);
   };
+  const token = localStorage.getItem("token");
 
   const confirmDelete = async () => {
     setIsLoading(true);
@@ -52,6 +53,9 @@ const Orders: React.FC = () => {
           `${NEXT_PUBLIC_API_BASE_URL}/api/orders/${ordertoDelete.id}`,
           {
             method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
         );
         const responeData = await response.json();
@@ -77,7 +81,14 @@ const Orders: React.FC = () => {
   // Function to fetch orders and stats
   const fetchOrders = async () => {
     try {
-      const response = await axios.get(`${NEXT_PUBLIC_API_BASE_URL}/api/orders/`);
+      const response = await axios.get(
+        `${NEXT_PUBLIC_API_BASE_URL}/api/orders/`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       const data = response.data.data;
 
       setOrders(data.orders);
@@ -106,7 +117,12 @@ const Orders: React.FC = () => {
       // Update the status on the backend
       await axios.patch(
         `${NEXT_PUBLIC_API_BASE_URL}/api/orders/${orderId}/toggleStatus`,
-        { status: updatedStatus }
+        { status: updatedStatus },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       // Re-fetch the orders and stats after the status update
@@ -136,9 +152,7 @@ const Orders: React.FC = () => {
       </div>
       {/* Error Message Display */}
       {errorMessage && (
-        <div className="mt-4 text-red-500 text-center">
-          {errorMessage}
-        </div>
+        <div className="mt-4 text-red-500 text-center">{errorMessage}</div>
       )}
 
       <div className="bg-black md:p-6 rounded-lg">
@@ -168,8 +182,9 @@ const Orders: React.FC = () => {
               {orders.map((order, index) => (
                 <tr
                   key={order.id}
-                  className={`${index % 2 === 0 ? "bg-[#ffffff12]" : "bg-black"
-                    }`}
+                  className={`${
+                    index % 2 === 0 ? "bg-[#ffffff12]" : "bg-black"
+                  }`}
                 >
                   <td className="text-gray-400 py-2 px-2 font-extralight text-sm">
                     {order.customerName}

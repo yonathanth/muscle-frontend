@@ -65,10 +65,14 @@ const Register = () => {
   const currentLocale = pathname.split("/")[1] || routing.defaultLocale; // Get the current locale from the pathname
   const segments = pathname.split("/");
   const pathnameWithoutLocale = segments.slice(2).join("/"); // Extract path after locale
-
+  const token = localStorage.getItem("token");
   useEffect(() => {
     axios
-      .get(`${NEXT_PUBLIC_API_BASE_URL}/api/services`)
+      .get(`${NEXT_PUBLIC_API_BASE_URL}/api/services`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         const fetchedServices = response.data.data;
         const categorizedServices: Record<string, Service[]> = {};
@@ -149,7 +153,7 @@ const Register = () => {
       ...formData,
       selectedPackage,
       totalPrice,
-      serviceId: selectedServiceId || "",
+      serviceId: selectedPackage || "",
     };
 
     const formDataToSend = new FormData();
@@ -167,7 +171,10 @@ const Register = () => {
         `${NEXT_PUBLIC_API_BASE_URL}/api/members`,
         formDataToSend,
         {
-          headers: { "Content-Type": "multipart/form-data" },
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 

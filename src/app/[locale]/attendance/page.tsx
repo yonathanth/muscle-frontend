@@ -8,7 +8,7 @@ const AttendancePage: React.FC = () => {
   const [userId, setUserId] = useState<string>("");
   const [result, setResult] = useState<string>("");
   const [error, setError] = useState<string>("");
-
+  const token = localStorage.getItem("token");
   // Handle scanned ID
   const handleScan = (e: React.ChangeEvent<HTMLInputElement>) => {
     const scannedId = e.target.value;
@@ -24,14 +24,34 @@ const AttendancePage: React.FC = () => {
       setError("");
       setResult("Processing...");
 
+      // Get current date in UTC
+      const now = new Date();
+      const utcDate = new Date(
+        Date.UTC(
+          now.getUTCFullYear(),
+          now.getUTCMonth(),
+          now.getUTCDate(),
+          now.getUTCHours(),
+          now.getUTCMinutes(),
+          now.getUTCSeconds()
+        )
+      );
+
       const response = await axios.post(
         `${NEXT_PUBLIC_API_BASE_URL}/api/attendance/${userId}`,
-        { id: userId }
+        {
+          timestamp: utcDate.toISOString(),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       if (response.data.success) {
         const { totalAttendance, name } = response.data.data;
-        setResult(`✅ Attendance recorded for ${name} successfully!.`);
+        setResult(`✅ Attendance recorded for ${name} successfully!`);
       }
     } catch (err: any) {
       setResult("");

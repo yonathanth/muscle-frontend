@@ -20,6 +20,7 @@ interface AddAdminProps {
 
 const AddAdmin = ({ setShowModal, fetchData }: AddAdminProps) => {
   const router = useRouter();
+  const token = localStorage.getItem("token");
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -56,7 +57,12 @@ const AddAdmin = ({ setShowModal, fetchData }: AddAdminProps) => {
   const fetchServices = async () => {
     try {
       const response = await axios.get(
-        `${NEXT_PUBLIC_API_BASE_URL}/api/services`
+        `${NEXT_PUBLIC_API_BASE_URL}/api/services`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       setServices(response.data.data);
     } catch {
@@ -150,7 +156,10 @@ const AddAdmin = ({ setShowModal, fetchData }: AddAdminProps) => {
         `${NEXT_PUBLIC_API_BASE_URL}/api/members`,
         formDataToSend,
         {
-          headers: { "Content-Type": "multipart/form-data" },
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 

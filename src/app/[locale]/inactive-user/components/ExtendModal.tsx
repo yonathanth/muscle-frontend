@@ -26,7 +26,7 @@ const ExtendModal: React.FC<ExtendModalProps> = ({
   const [success, setSuccess] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
-
+  const token = localStorage.getItem("token");
   const onOptionsConfirm = () => {
     setIsConfirmOpen(true);
   };
@@ -38,7 +38,12 @@ const ExtendModal: React.FC<ExtendModalProps> = ({
     try {
       const response = await axios.post(
         `${NEXT_PUBLIC_API_BASE_URL}/api/subscriptionRequest/${userId}`,
-        { serviceId }
+        { serviceId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       if (response.status === 201) {
         setMessage("Request submitted successfully!");
@@ -137,18 +142,16 @@ const ExtendModal: React.FC<ExtendModalProps> = ({
               <span className="text-customBlue font-bold">{serviceFee}</span> to
               one of the following options and keep the receipts or screenshots
               of your payment with you. If you have any questions, please call
-              us at 0943313282.
+              us at 0945511884.
             </p>
 
             <div className="bg-black p-4 rounded-lg">
               <p className="font-bold mb-2">Payment Options</p>
               <ul className="text-sm">
-                <li>CBE: 1000403462385 - Samrawit Solomon </li>
-                <li>CBE: 1000351858684 - Robel Getahun </li>
+                <li>CBE: 1000403462385 - Nehemiah </li>
+                <li>CBE: 1000351858684 - Muscle Fitness Gym </li>
 
-                <li>
-                  ABYSSINIA: 119144884 - Robel Getahun and or Samrawit Solomon
-                </li>
+                <li>Telebirr: 0945511884 - Nehemiah</li>
               </ul>
             </div>
             <div className="flex justify-center mt-6">

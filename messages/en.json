@@ -17,11 +17,12 @@
       "subtitle": "Where strength meets determination. Your journey to a stronger, better you starts here.",
       "ctaButton": "Join Now",
       "members": "Members",
-      "services": "Services"
+      "services": "Services",
+      "locations": "Locations"
     },
     "aboutSection": {
       "title": "About Us",
-      "description": "MUSCLE FITNESS Center is more than just a gym—it’s a family. Located in Addis, we’ve created a welcoming environment where members of all fitness levels can achieve their goals. Our passionate team of trainers and state-of-the-art facilities ensure you get the support and guidance needed to succeed."
+      "description": "MUSCLE FITNESS Center is more than just a gym—it's a family. Located in Addis, we've created a welcoming environment where members of all fitness levels can achieve their goals. Our passionate team of trainers and state-of-the-art facilities ensure you get the support and guidance needed to succeed."
     },
     "bmiSection": {
       "heading": "Every rep brings you closer to greatness",
@@ -94,7 +95,7 @@
         {
           "before": "Before",
           "after": "After",
-          "quote": "I wanted to lose weight after giving birth, but I wasn’t sure where to start. Robi helped me create a plan that fit my lifestyle, and I ended up losing 12 kilos while feeling more energetic and healthy. His coaching has made a huge impact on my life!",
+          "quote": "I wanted to lose weight after giving birth, but I wasn't sure where to start. Robi helped me create a plan that fit my lifestyle, and I ended up losing 12 kilos while feeling more energetic and healthy. His coaching has made a huge impact on my life!",
           "name": "Meheret Alemu"
         },
         {
@@ -112,7 +113,7 @@
         {
           "before": "Before",
           "after": "After",
-          "quote": "I wanted to lose weight after giving birth, but I wasn’t sure where to start. Robi helped me create a plan that fit my lifestyle, and I ended up losing 8 kilos while feeling more energetic and healthy. His coaching has made a huge impact on my life!",
+          "quote": "I wanted to lose weight after giving birth, but I wasn't sure where to start. Robi helped me create a plan that fit my lifestyle, and I ended up losing 8 kilos while feeling more energetic and healthy. His coaching has made a huge impact on my life!",
           "name": "Meheret Alemu"
         }
       ]
@@ -358,7 +359,7 @@
   },
   "contact_page": {
     "heading": "Contact Us",
-    "description": "We’d love to hear from you! Whether you have questions about our classes, need assistance with your membership, or just want to share your feedback, our team is here to help.",
+    "description": "We'd love to hear from you! Whether you have questions about our classes, need assistance with your membership, or just want to share your feedback, our team is here to help.",
     "details": {
       "address": {
         "label": "Address",

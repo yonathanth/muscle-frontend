@@ -21,11 +21,16 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({ activeNav }) => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
-
+  const token = localStorage.getItem("token");
   const fetchNotifications = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/notifications`
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/notifications`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       if (response.data.success) {
         setNotifications(response.data.data);
@@ -41,7 +46,13 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({ activeNav }) => {
   const markNotificationsAsRead = async () => {
     try {
       await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/notifications/mark-read`
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/notifications/mark-read`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       await fetchNotifications();
     } catch (error) {

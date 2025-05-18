@@ -98,10 +98,16 @@ const GymMembersList = () => {
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   const fetchMembers = async () => {
+    const token = localStorage.getItem("token");
     setIsPageLoading(true);
     try {
       const response = await axios.get(
-        `${NEXT_PUBLIC_API_BASE_URL}/api/members?page=${currentPage}&search=${searchTerm}&status=${statusFilter}&sortBy=${sortBy}&sortOrder=${sortOrder}`
+        `${NEXT_PUBLIC_API_BASE_URL}/api/members?page=${currentPage}&search=${searchTerm}&status=${statusFilter}&sortBy=${sortBy}&sortOrder=${sortOrder}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       const { users, pagination } = response.data.data;
       setMemberList(users);
@@ -167,14 +173,21 @@ const GymMembersList = () => {
     startDate?: string,
     freezeDuration?: number
   ) => {
+    const token = localStorage.getItem("token");
     setIsLoading(true);
     try {
       const response = await axios.put(
         `${NEXT_PUBLIC_API_BASE_URL}/api/memberManagement/${memberId}/status`,
+
         {
           status: newStatus,
           startDate,
           freezeDuration,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
       console.log(response.data);
@@ -193,10 +206,16 @@ const GymMembersList = () => {
   };
 
   const deleteMember = async (memberId: string) => {
+    const token = localStorage.getItem("token");
     setIsLoading(true);
     try {
       const response = await axios.delete(
-        `${NEXT_PUBLIC_API_BASE_URL}/api/members/${memberId}`
+        `${NEXT_PUBLIC_API_BASE_URL}/api/members/${memberId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       if (response.status === 200) {
         setMemberList((prev) =>

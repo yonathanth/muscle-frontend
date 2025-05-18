@@ -1,7 +1,6 @@
-import {useState} from "react";
+import { useState } from "react";
 import axios from "axios";
 const NEXT_PUBLIC_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-
 
 interface NotificationModalProps {
   isOpen: boolean;
@@ -11,14 +10,16 @@ interface NotificationModalProps {
 }
 
 const NotificationModal: React.FC<NotificationModalProps> = ({
-                                                               isOpen,
-                                                               onClose,
-                                                               onSend,
-                                                               userId,
-                                                             }) => {
+  isOpen,
+  onClose,
+  onSend,
+  userId,
+}) => {
   const [name, setName] = useState("");
+  const token = localStorage.getItem("token");
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState<"success" | "error" | null>(null);
+
   if (!isOpen) return null;
 
   const handleSend = async () => {
@@ -26,11 +27,17 @@ const NotificationModal: React.FC<NotificationModalProps> = ({
       const response = await axios.post(
         `${NEXT_PUBLIC_API_BASE_URL}/api/members/${userId}/notification`,
         {
-          add:
-            [{
+          add: [
+            {
               name,
               description,
-            }]
+            },
+          ],
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 

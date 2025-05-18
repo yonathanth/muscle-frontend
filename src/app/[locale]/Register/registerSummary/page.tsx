@@ -69,13 +69,12 @@ const RegisterSummary = () => {
             <p className="mb-2 text-black">
               Please transfer the total amount to one of the following accounts:
             </p>
-            <ul className="list-none text-black">
-              <li>CBE: 1000403462385 - Samrawit Solomon </li>
-              <li>CBE: 1000351858684 - Robel Getahun </li>
 
-              <li>
-                ABYSSINIA: 119144884 - Robel Getahun and or Samrawit Solomon
-              </li>
+            <ul className="text-sm">
+              <li>CBE: 1000403462385 - Nehemiah </li>
+              <li>CBE: 1000351858684 - Muscle Fitness Gym </li>
+
+              <li>Telebirr: 0945511884 - Nehemiah</li>
             </ul>
           </div>
           <p className="text-sm text-gray-400 mt-4">

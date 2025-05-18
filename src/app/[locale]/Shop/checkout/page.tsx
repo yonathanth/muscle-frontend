@@ -16,7 +16,7 @@ const RegisterSummary = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [showModal, setShowModal] = useState(false); // Modal state
   const [loading, setLoading] = useState(false);
-
+  const token = localStorage.getItem("token");
   const router = useRouter(); // For navigating back to shop
 
   useEffect(() => {
@@ -60,6 +60,7 @@ const RegisterSummary = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(orderData),
       });
@@ -193,7 +194,7 @@ const RegisterSummary = () => {
                 <strong>Bank of Abyssinia:</strong> Account Number 987654321
               </li>
               <li>
-                <strong>TeleBirr:</strong> Phone Number 0912345678
+                <strong>TeleBirr:</strong> Phone Number 0945511884
               </li>
             </ul>
           </div>

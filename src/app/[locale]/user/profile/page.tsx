@@ -94,7 +94,7 @@ const Page = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [showEditForm, setShowEditForm] = useState<boolean>(false);
   const [isPageLoading, setIsPageLoading] = useState<boolean>(false);
-
+  const token = localStorage.getItem("token");
   useEffect(() => {
     // Decode the token to extract the userId
     const decodeToken = () => {
@@ -128,7 +128,12 @@ const Page = () => {
 
     try {
       const response = await fetch(
-        `${NEXT_PUBLIC_API_BASE_URL}/api/memberManagement/${userId}/profile`
+        `${NEXT_PUBLIC_API_BASE_URL}/api/memberManagement/${userId}/profile`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       if (!response.ok) {
         throw new Error("Failed to fetch member details");
@@ -177,7 +182,7 @@ const Page = () => {
           <div className="flex items-center p-4 space-x-4">
             <Image
               src={
-                `${NEXT_PUBLIC_API_BASE_URL}${memberDetails.profileImageUrl}` ||
+                `${NEXT_PUBLIC_API_BASE_URL}${memberDetails.profileImageUrl} ` ||
                 ""
               }
               alt="Profile"

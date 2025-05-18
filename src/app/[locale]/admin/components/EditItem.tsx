@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import SmallLoading from "./SmallLoading";
 const NEXT_PUBLIC_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-
 interface EditItemFormProps {
   item: {
     id: string;
@@ -27,6 +26,7 @@ const EditItemForm: React.FC<EditItemFormProps> = ({
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
+    const token = localStorage.getItem("token");
     e.preventDefault();
     if (!itemName || !category || quantity <= 0) return;
 
@@ -41,6 +41,7 @@ const EditItemForm: React.FC<EditItemFormProps> = ({
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(updatedItem),
         }

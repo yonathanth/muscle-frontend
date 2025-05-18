@@ -57,12 +57,17 @@ const ExtendModal: React.FC<ModalProps> = ({ isOpen, onClose, user }) => {
   const [hasRequested, setHasRequested] = useState<boolean>(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
+  const token = localStorage.getItem("token");
   useEffect(() => {
     const fetchServiceFee = async () => {
       try {
         const response = await axios.get(
-          `${NEXT_PUBLIC_API_BASE_URL}/api/services/${user.serviceId}`
+          `${NEXT_PUBLIC_API_BASE_URL}/api/services/${user.serviceId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         setServiceFee(response.data?.data?.price || null);
       } catch (error) {
@@ -75,7 +80,12 @@ const ExtendModal: React.FC<ModalProps> = ({ isOpen, onClose, user }) => {
 
       try {
         const response = await axios.get(
-          `${NEXT_PUBLIC_API_BASE_URL}/api/subscriptionRequest/${user.id}/subscriptionStatus`
+          `${NEXT_PUBLIC_API_BASE_URL}/api/subscriptionRequest/${user.id}/subscriptionStatus`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         setHasRequested(response.data.status === "pending");
       } catch (error) {
@@ -94,7 +104,12 @@ const ExtendModal: React.FC<ModalProps> = ({ isOpen, onClose, user }) => {
     try {
       const response = await axios.post(
         `${NEXT_PUBLIC_API_BASE_URL}/api/subscriptionRequest/${user.id}`,
-        { serviceId }
+        { serviceId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       if (response.status === 201) {
@@ -160,7 +175,7 @@ const ExtendModal: React.FC<ModalProps> = ({ isOpen, onClose, user }) => {
                   <ul className="text-sm">
                     <li>COMMERCIAL BANK OF ETHIOPIA: 1000564737339</li>
                     <li>BANK OF ABYSSINIA: 34323236</li>
-                    <li>TELEBIRR: 094768748</li>
+                    <li>TELEBIRR: 0945511884</li>
                     <li>DASHEN BANK: 4464738990</li>
                     <li>COOP: 74484930</li>
                   </ul>

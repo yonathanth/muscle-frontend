@@ -1,16 +1,14 @@
 "use client";
-import React, {useCallback, useEffect, useState} from "react";
-import {jwtDecode} from "jwt-decode";
+import React, { useCallback, useEffect, useState } from "react";
+import { jwtDecode } from "jwt-decode";
 import MyWorkoutPlanPage from "@/src/app/[locale]/user/my-plan/MyWorkoutPlan/page";
 import MyMealPlanPage from "@/src/app/[locale]/user/my-plan/MyMealPlan/page";
 import LoadingPage from "@/src/app/[locale]/user/loading";
 const NEXT_PUBLIC_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-
 interface CustomJwtPayload {
   id: string;
 }
-
 
 export default function MyPlansPage() {
   const [view, setView] = useState("workouts");
@@ -19,28 +17,49 @@ export default function MyPlansPage() {
   const [userId, setUserId] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
-
-  const fetchData = useCallback(async (type: string) => {
-    try {
-      setIsLoading(true);
-      setError(null);
-      let res, data;
-      if (type === "workouts") {
-        res = await fetch(`${NEXT_PUBLIC_API_BASE_URL}/api/members/${userId}/getMyWorkouts`, {cache: "no-store"});
-        data = await res.json();
-        return data.data || [];
-      } else if (type === "mealPlans") {
-        res = await fetch(`${NEXT_PUBLIC_API_BASE_URL}/api/members/${userId}/getMyMealPlans`, {cache: "no-store"});
-        data = await res.json();
-        return data.data || [];
+  const token = localStorage.getItem("token");
+  const fetchData = useCallback(
+    async (type: string) => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        let res, data;
+        if (type === "workouts") {
+          res = await fetch(
+            `${NEXT_PUBLIC_API_BASE_URL}/api/members/${userId}/getMyWorkouts`,
+            {
+              cache: "no-store",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          data = await res.json();
+          return data.data || [];
+        } else if (type === "mealPlans") {
+          res = await fetch(
+            `${NEXT_PUBLIC_API_BASE_URL}/api/members/${userId}/getMyMealPlans`,
+            {
+              cache: "no-store",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          data = await res.json();
+          return data.data || [];
+        }
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "An unknown error occurred"
+        );
+        return []; // Return an empty array if there's an error
+      } finally {
+        setIsLoading(false);
       }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "An unknown error occurred");
-      return []; // Return an empty array if there's an error
-    } finally {
-      setIsLoading(false);
-    }
-  },[userId]);
+    },
+    [userId]
+  );
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -58,13 +77,11 @@ export default function MyPlansPage() {
 
   useEffect(() => {
     if (userId) {
-      fetchData(view)
-        .then((fetchedData) => {
-          setData(fetchedData);
-        });
+      fetchData(view).then((fetchedData) => {
+        setData(fetchedData);
+      });
     }
   }, [userId, view, fetchData]);
-
 
   return (
     <div className="min-h-screen text-white">
@@ -73,7 +90,9 @@ export default function MyPlansPage() {
         <button
           onClick={() => setView("workouts")}
           className={`text-sm font-light  md:text-sm px-4 py-2 rounded-full transition-colors ${
-            view === "workouts" ? "bg-customBlue" : "bg-[#252525] hover:bg-[#333]"
+            view === "workouts"
+              ? "bg-customBlue"
+              : "bg-[#252525] hover:bg-[#333]"
           }`}
         >
           My Workout Plans
@@ -81,7 +100,9 @@ export default function MyPlansPage() {
         <button
           onClick={() => setView("mealPlans")}
           className={`text-sm font-light  md:text-sm px-4 py-2 rounded-full transition-colors ${
-            view === "mealPlans" ? "bg-customBlue" : "bg-[#252525] hover:bg-[#333]"
+            view === "mealPlans"
+              ? "bg-customBlue"
+              : "bg-[#252525] hover:bg-[#333]"
           }`}
         >
           My Meal Plans
@@ -89,7 +110,7 @@ export default function MyPlansPage() {
       </nav>
       <main className="p-4 md:p-8 mx-auto">
         {isLoading ? (
-          <LoadingPage/>
+          <LoadingPage />
         ) : error ? (
           <div className="text-white col-span-3 bg-zinc-900 p-10 rounded-lg m-20">
             <div className="text-4xl font-bold text-red-500">Error</div>
@@ -97,7 +118,9 @@ export default function MyPlansPage() {
             <div className="mt-5">
               <button
                 className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
-                onClick={() => fetchData(view).then((fetchedData) => setData(fetchedData))}
+                onClick={() =>
+                  fetchData(view).then((fetchedData) => setData(fetchedData))
+                }
               >
                 Retry
               </button>
@@ -105,15 +128,22 @@ export default function MyPlansPage() {
           </div>
         ) : data.length === 0 ? (
           <div className="text-white col-span-3 bg-zinc-900 p-10 rounded-lg m-20">
-            <div className="text-4xl font-bold">{view === "workouts" ? "No Workouts Found": "No Meal Plans Found"}</div>
+            <div className="text-4xl font-bold">
+              {view === "workouts"
+                ? "No Workouts Found"
+                : "No Meal Plans Found"}
+            </div>
           </div>
+        ) : view === "workouts" ? (
+          <>
+            <MyWorkoutPlanPage
+              className="col-span-3"
+              plans={data}
+              userId={userId}
+            />
+          </>
         ) : (
-          view === "workouts" ?
-            <>
-              <MyWorkoutPlanPage className="col-span-3" plans={data} userId={userId}/>
-            </>
-            :
-            <MyMealPlanPage className="col-span-3" plans={data} userId={userId}/>
+          <MyMealPlanPage className="col-span-3" plans={data} userId={userId} />
         )}
       </main>
     </div>
@@ -127,11 +157,19 @@ export default function MyPlansPage() {
 //       let res, data;
 //
 //       if (type === "workouts") {
-//         res = await fetch("${NEXT_PUBLIC_API_BASE_URL}/api/workouts/", {cache: "no-store"});
+//         res = await fetch("${NEXT_PUBLIC_API_BASE_URL}/api/workouts/", {cache: "no-store",
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//           },
+//         });
 //         data = await res.json();
 //         return data.data.workouts || [];
 //       } else if (type === "mealPlans") {
-//         res = await fetch("${NEXT_PUBLIC_API_BASE_URL}/api/mealPlans/", {cache: "no-store"});
+//         res = await fetch("${NEXT_PUBLIC_API_BASE_URL}/api/mealPlans/", {cache: "no-store",
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//           },
+//         });
 //         data = await res.json();
 //         return data.data.mealPlans || [];
 //       }

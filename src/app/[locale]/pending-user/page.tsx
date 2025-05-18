@@ -18,6 +18,7 @@ const ResponsiveModal: React.FC = () => {
   const [filledOUtTheForm, setFilledOutTheForm] = useState(false);
 
   const [userId, setUserId] = useState("");
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     // Decode the token to extract the userId
@@ -47,7 +48,12 @@ const ResponsiveModal: React.FC = () => {
       if (!userId) return;
       try {
         const response = await axios.get(
-          `${NEXT_PUBLIC_API_BASE_URL}/api/nonActiveMembers/${userId}`
+          `${NEXT_PUBLIC_API_BASE_URL}/api/nonActiveMembers/${userId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         const fullName = response.data.username;
         const serviceFee = response.data.servicePrice;

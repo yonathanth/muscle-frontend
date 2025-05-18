@@ -1,9 +1,9 @@
-import React, {useEffect, useMemo, useState} from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import {usePathname} from "next/navigation";
-import logo from "@/assets/logos/logo.svg";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import { usePathname } from "next/navigation";
+import logo from "@/assets/logos/logo (3).svg";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCalendarCheck,
   faPersonRunning,
@@ -23,7 +23,7 @@ const iconMapping: { [key: string]: IconDefinition } = {
   faUser: faUser,
 };
 
-const UserSidebar: React.FC<UserSidebarProps> = ({setActiveNav}) => {
+const UserSidebar: React.FC<UserSidebarProps> = ({ setActiveNav }) => {
   const pathname = usePathname();
   const [activeNav, setActive] = useState<string>("Dashboard");
 
@@ -47,7 +47,7 @@ const UserSidebar: React.FC<UserSidebarProps> = ({setActiveNav}) => {
   return (
     <aside className="bg-black w-40 text-white flex flex-col border-r-[0.5px] border-gray-800">
       <div className="p-[0.85rem] border-b-[0.5px] border-gray-800">
-        <Image src={logo} alt="logo" className="w-28 mx-auto"/>
+        <Image src={logo} alt="logo" className="w-10 h-10 mx-automx-auto" />
       </div>
 
       <nav className="flex-grow mx-auto flex flex-col gap-4 pt-10 text-sm">
@@ -67,7 +67,8 @@ const UserSidebar: React.FC<UserSidebarProps> = ({setActiveNav}) => {
                   ? "opacity-100"
                   : "opacity-0 group-hover:opacity-100"
               }`}
-            ></span>            <span
+            ></span>{" "}
+            <span
               className={`${
                 activeNav === item.name ? "text-customBlue" : "text-white"
               }`}

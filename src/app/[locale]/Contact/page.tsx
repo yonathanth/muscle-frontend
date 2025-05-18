@@ -58,7 +58,7 @@ const Contact = () => {
       <section className="min-h-screen py-36 flex flex-col items-center justify-center bg-black text-white">
         <div className="text-center mb-10">
           <h2 className="text-4xl font-bold mb-4">{t("heading")}</h2>
-          <p className="text-gray-400 max-w-3xl mx-auto">{t("description")}</p>
+          <p className="text-gray-400 max-w-3xl mx-5 ">{t("description")}</p>
         </div>
 
         <div className="flex flex-wrap justify-around items-start w-full max-w-7xl px-6">
@@ -76,7 +76,7 @@ const Contact = () => {
                   <h3 className="text-lg font-semibold text-customBlue">
                     {t("details.address.label")}
                   </h3>
-                  <p className="text-white">{t("details.address.value")}</p>
+                  <p className="text-white">Megeneagna, Figa , Gerji , Hayat</p>
                 </div>
               </div>
 
@@ -91,7 +91,7 @@ const Contact = () => {
                   <h3 className="text-lg font-semibold text-customBlue">
                     {t("details.phone.label")}
                   </h3>
-                  <p className="text-white">+251 911 2345 212</p>
+                  <p className="text-white">0945511884</p>
                 </div>
               </div>
 

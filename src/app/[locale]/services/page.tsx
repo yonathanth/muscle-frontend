@@ -64,12 +64,17 @@ const Page = () => {
   const currentLocale = pathname.split("/")[1] || routing.defaultLocale; // Get the current locale from the pathname
   const segments = pathname.split("/");
   const pathnameWithoutLocale = segments.slice(2).join("/"); // Extract path after locale
-
+  const token = localStorage.getItem("token");
   const fetchServices = async () => {
     setIsLoading(true);
     try {
       const response = await axios.get(
-        `${NEXT_PUBLIC_API_BASE_URL}/api/services`
+        `${NEXT_PUBLIC_API_BASE_URL}/api/services`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       const data = response.data.data;
       const categorizedServices: { [key in TabName]?: ServiceType[] } = {};

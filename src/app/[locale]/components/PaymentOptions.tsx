@@ -33,7 +33,7 @@ const PaymentOptions: React.FC<ModalProps> = ({ isOpen, amount, onClose }) => {
           <p className="text-sm text-center mb-6">
             {`Please, transfer Birr ${amount} to one of the following
             Options. If you have any questions, please call us with the number
-            0993971420`}
+            0945511884`}
           </p>
           <div className="bg-black p-4 rounded-lg">
             <p className="font-bold mb-2">Payment options</p>

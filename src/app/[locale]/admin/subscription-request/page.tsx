@@ -17,13 +17,19 @@ interface Requests {
 
 const Page = () => {
   const [requests, setRequests] = useState<Requests[]>([]);
+  const token = localStorage.getItem("token");
 
   // Fetch Requests and stats from API
   useEffect(() => {
     const fetchRequest = async () => {
       try {
         const response = await axios.get(
-          `${NEXT_PUBLIC_API_BASE_URL}/api/subscriptionRequest/`
+          `${NEXT_PUBLIC_API_BASE_URL}/api/subscriptionRequest/`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         const data = response.data.data;
 
@@ -40,7 +46,12 @@ const Page = () => {
     try {
       await axios.patch(
         `${NEXT_PUBLIC_API_BASE_URL}/api/subscriptionRequest/${id}/changeStatus`,
-        { status: newStatus }
+        { status: newStatus },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       setRequests((prevRequests) =>
         prevRequests.map((request) =>

@@ -34,12 +34,17 @@ const FinancialReport = () => {
 
   const [selectedTransaction, setSelectedTransaction] = useState<any>(null);
   const [filter, setFilter] = useState("monthly");
+  const token = localStorage.getItem("token");
 
   const apiUrl = `${NEXT_PUBLIC_API_BASE_URL}/api/finance`;
 
   const fetchTransactions = async () => {
     try {
-      const response = await axios.get(`${apiUrl}?filter=${filter}`);
+      const response = await axios.get(`${apiUrl}?filter=${filter}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const data = response.data.data;
 
       const sortedTransactions = data.transactions.sort(
@@ -90,12 +95,20 @@ const FinancialReport = () => {
     setIsLoading(true);
 
     axios
-      .post(apiUrl, {
-        name,
-        category,
-        amount: transactionAmount.toString(),
-        type,
-      })
+      .post(
+        apiUrl,
+        {
+          name,
+          category,
+          amount: transactionAmount.toString(),
+          type,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       .then((response) => {
         const addedTransaction = response.data.data;
         setTransactions((prev) => [...prev, addedTransaction]);

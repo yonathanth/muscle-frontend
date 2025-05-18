@@ -12,7 +12,7 @@ const RegisterForm = () => {
   const searchParams = useSearchParams();
   const memberId = searchParams.get("id");
   const [errors, setErrors] = useState<Record<string, string>>({});
-
+  const token = localStorage.getItem("token");
   const [formData, setFormData] = useState({
     fullName: "",
     phoneNumber: "",
@@ -98,6 +98,11 @@ const RegisterForm = () => {
           ...formData,
           healthCondition: JSON.stringify(formData.healthCondition),
           isComplete: true,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 

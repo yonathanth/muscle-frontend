@@ -7,7 +7,6 @@ import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 import SmallLoading from "../components/SmallLoading";
 const NEXT_PUBLIC_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-
 interface ServiceType {
   id: number;
   name: string;
@@ -38,7 +37,7 @@ const Services: React.FC = () => {
   const [activeTab, setActiveTab] = useState<keyof typeof services>("Exercise");
   const [modalService, setModalService] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-
+  const token = localStorage.getItem("token");
   const [formData, setFormData] = useState({
     name: "",
     period: "",
@@ -51,7 +50,14 @@ const Services: React.FC = () => {
 
   const fetchServices = async () => {
     try {
-      const response = await axios.get(`${NEXT_PUBLIC_API_BASE_URL}/api/services`);
+      const response = await axios.get(
+        `${NEXT_PUBLIC_API_BASE_URL}/api/services`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       const data = response.data.data;
       const categorizedServices: { [key in TabName]?: ServiceType[] } = {};
       data.forEach((service: ServiceType) => {
@@ -108,7 +114,10 @@ const Services: React.FC = () => {
         `${NEXT_PUBLIC_API_BASE_URL}/api/services`,
         newService,
         {
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
@@ -194,7 +203,12 @@ const Services: React.FC = () => {
 
     try {
       const response = await axios.delete(
-        `${NEXT_PUBLIC_API_BASE_URL}/api/services/${serviceToDelete.id}`
+        `${NEXT_PUBLIC_API_BASE_URL}/api/services/${serviceToDelete.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       if (response.status === 204) {

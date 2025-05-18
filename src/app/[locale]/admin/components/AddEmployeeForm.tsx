@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import SmallLoading from "./SmallLoading";
 const NEXT_PUBLIC_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-
 interface AddEmployeeModalProps {
   closeModal: () => void;
   addNewMember: (newMember: Member) => Promise<void>;
@@ -35,6 +34,7 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
 
   // Function to handle the form submission
   const handleAddEmployee = async () => {
+    const token = localStorage.getItem("token");
     if (name && phone && startDate && jobType) {
       const newMember: Omit<Member, "id"> = {
         name,
@@ -51,6 +51,7 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
           {
             method: "POST",
             headers: {
+              Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
             },
             body: JSON.stringify(newMember),

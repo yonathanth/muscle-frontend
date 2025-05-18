@@ -15,7 +15,6 @@ import { Link } from "../../../i18n/routing";
 import Staff from "./componenets/ourStaff";
 import React from "react";
 import { useTranslations } from "next-intl";
-import { Metadata } from "next";
 
 const AboutUsPage = () => {
   const t = useTranslations("about_page"); // Use the correct hook

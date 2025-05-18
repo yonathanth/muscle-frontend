@@ -1,31 +1,46 @@
-'use client'
-import React, {useEffect, useState} from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import LoadingPage from "../../../loading";
-import {MealPlanType, MealType} from "@/src/app/[locale]/user/Plans/Meals/page";
+import {
+  MealPlanType,
+  MealType,
+} from "@/src/app/[locale]/user/Plans/Meals/page";
 import Image from "next/image";
-import {MealCategory} from "@/src/app/[locale]/user/Plans/MealPlans/page";
+import { MealCategory } from "@/src/app/[locale]/user/Plans/MealPlans/page";
 const NEXT_PUBLIC_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-
-
-export default function MyMealPlan({params}:{params:{locale:string; MyMealPlanId:string}}) {
+export default function MyMealPlan({
+  params,
+}: {
+  params: { locale: string; MyMealPlanId: string };
+}) {
   const [plan, setPlan] = useState<MealPlanType | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
   const [isModalOpen, setModalOpen] = useState(false);
-
+  const token = localStorage.getItem("token");
   const getMealPlan = async (id: string) => {
     try {
       setIsLoading(true);
-      const res = await fetch(`${NEXT_PUBLIC_API_BASE_URL}/api/mealPlans/${id}`, {cache: "no-store"});
+      const res = await fetch(
+        `${NEXT_PUBLIC_API_BASE_URL}/api/mealPlans/${id}`,
+        {
+          cache: "no-store",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (!res.ok) {
         throw new Error(`Failed to fetch meal plan: ${res.statusText}`);
       }
       const data = await res.json();
       setPlan(data.data.mealPlan);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An unknown error occurred");
+      setError(
+        err instanceof Error ? err.message : "An unknown error occurred"
+      );
     } finally {
       setIsLoading(false);
     }
@@ -37,25 +52,23 @@ export default function MyMealPlan({params}:{params:{locale:string; MyMealPlanId
 
   if (!plan) return <LoadingPage />;
 
-
-  let totalCalories = 0
-  let totalProteins = 0
-  let totalCarbs = 0
-  let totalFat = 0
-  plan.meals.forEach((meal, index) =>{
-    totalProteins += meal.protein ? meal.protein : 0
-    totalFat += meal.fats ? meal.fats : 0
-    totalCarbs += meal.carbs ? meal.carbs : 0
-    totalCalories += meal.calories ? meal.calories : 0
+  let totalCalories = 0;
+  let totalProteins = 0;
+  let totalCarbs = 0;
+  let totalFat = 0;
+  plan.meals.forEach((meal, index) => {
+    totalProteins += meal.protein ? meal.protein : 0;
+    totalFat += meal.fats ? meal.fats : 0;
+    totalCarbs += meal.carbs ? meal.carbs : 0;
+    totalCalories += meal.calories ? meal.calories : 0;
   });
 
   const groupedMealsByCategory = (meals: MealType[]) => {
-    const grouped:Record<MealCategory, MealType[]> =
-      {
-        breakfast: [],
-        lunch: [],
-        dinner: []
-      };
+    const grouped: Record<MealCategory, MealType[]> = {
+      breakfast: [],
+      lunch: [],
+      dinner: [],
+    };
     meals.forEach((meal) => {
       // @ts-ignore
       if (grouped[meal.category]) {
@@ -105,7 +118,7 @@ export default function MyMealPlan({params}:{params:{locale:string; MyMealPlanId
     <div className="bg-black text-white min-h-screen p-8 flex flex-col gap-6 h-[80%]">
       {/* Header with Progress Bar */}
       <div className="w-full h-1 bg-gray-700 mt-2">
-        <div className="h-1 bg-customBlue" style={{width: "50%"}}></div>
+        <div className="h-1 bg-customBlue" style={{ width: "50%" }}></div>
       </div>
       {/* Content Section */}
       <div className="flex flex-col lg:flex-row gap-6 flex-1">
@@ -116,7 +129,9 @@ export default function MyMealPlan({params}:{params:{locale:string; MyMealPlanId
             {/* Image component with layout 'fill' */}
             <div className="relative w-full h-full">
               <Image
-                src={`${NEXT_PUBLIC_API_BASE_URL}/uploads/mealPlans/${plan ? plan.slug : ""}`}
+                src={`${NEXT_PUBLIC_API_BASE_URL}/uploads/mealPlans/${
+                  plan ? plan.slug : ""
+                }`}
                 alt={plan.name}
                 layout="fill" // This makes the image fill the container
                 objectFit="cover" // Ensures the image behaves like a background (covering the area)
@@ -134,7 +149,9 @@ export default function MyMealPlan({params}:{params:{locale:string; MyMealPlanId
           <div className="bg-[#252525] p-4 rounded-lg mt-2 lg:mt-2">
             <h2 className="text-base font-semibold">{plan.mainGoal}</h2>
             <div className="mt-4">
-              <h3 className="text-sm text-white font-semibold py-2">Daily Goal</h3>
+              <h3 className="text-sm text-white font-semibold py-2">
+                Daily Goal
+              </h3>
               <div className="space-y-2 font-extralight">
                 <p className="flex text-tiny justify-between">
                   Protein <span>{totalProteins} g</span>
@@ -153,43 +170,50 @@ export default function MyMealPlan({params}:{params:{locale:string; MyMealPlanId
           </div>
         </div>
 
-
         {/* Center Schedule */}
 
         <div className="">
           <div className="bg-[#1C1C1C] p-3 rounded-lg h-96 overflow-y-auto">
             <ul className="text-xs space-y-2">
-              {Array.from({length: Math.ceil(plan.duration / 4)}).map((_, monthIndex) => (
-                <li className="cursor-pointer hover:bg-[#333333] p-2 rounded-md" key={monthIndex}>
-                  Month {monthIndex + 1}
-                  <ul className="pl-4 mt-2">
-                    {Array.from({length: 4}).map((_, weekIndex) => (
-                      <li className="cursor-pointer hover:bg-[#444444] p-2 rounded-md" key={weekIndex}>
-                        Week {weekIndex + 1}
-                        <ul className="pl-4 mt-2 flex flex-col">
-                          {Array.from({length: 7}).map((_, dayIndex) => {
-                            const uniqueDayIndex = `${monthIndex}-${weekIndex}-${dayIndex}`; // Unique identifier
-                            return (
-                              <button
-                                key={dayIndex}
-                                className="cursor-pointer hover:bg-[#555555] p-2 rounded-md"
-                                onClick={() => {
-                                  setSelectedDay(uniqueDayIndex);
-                                  setModalOpen(false);
-                                }}
-                              >
-                                <li className="">
-                                  <div>Day {dayIndex + 1}</div>
-                                </li>
-                              </button>
-                            );
-                          })}
-                        </ul>
-                      </li>
-                    ))}
-                  </ul>
-                </li>
-              ))}
+              {Array.from({ length: Math.ceil(plan.duration / 4) }).map(
+                (_, monthIndex) => (
+                  <li
+                    className="cursor-pointer hover:bg-[#333333] p-2 rounded-md"
+                    key={monthIndex}
+                  >
+                    Month {monthIndex + 1}
+                    <ul className="pl-4 mt-2">
+                      {Array.from({ length: 4 }).map((_, weekIndex) => (
+                        <li
+                          className="cursor-pointer hover:bg-[#444444] p-2 rounded-md"
+                          key={weekIndex}
+                        >
+                          Week {weekIndex + 1}
+                          <ul className="pl-4 mt-2 flex flex-col">
+                            {Array.from({ length: 7 }).map((_, dayIndex) => {
+                              const uniqueDayIndex = `${monthIndex}-${weekIndex}-${dayIndex}`; // Unique identifier
+                              return (
+                                <button
+                                  key={dayIndex}
+                                  className="cursor-pointer hover:bg-[#555555] p-2 rounded-md"
+                                  onClick={() => {
+                                    setSelectedDay(uniqueDayIndex);
+                                    setModalOpen(false);
+                                  }}
+                                >
+                                  <li className="">
+                                    <div>Day {dayIndex + 1}</div>
+                                  </li>
+                                </button>
+                              );
+                            })}
+                          </ul>
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                )
+              )}
             </ul>
           </div>
         </div>
@@ -205,7 +229,10 @@ export default function MyMealPlan({params}:{params:{locale:string; MyMealPlanId
                 .map(Number);
               return ["breakfast", "lunch", "dinner"].map((category, index) => {
                 const mealCategory = category as MealCategory; // Explicitly cast as MealCategory
-                const meal = groupedMeals[mealCategory][dayIndex % groupedMeals[mealCategory].length];
+                const meal =
+                  groupedMeals[mealCategory][
+                    dayIndex % groupedMeals[mealCategory].length
+                  ];
                 return (
                   <div
                     key={category}
@@ -213,25 +240,31 @@ export default function MyMealPlan({params}:{params:{locale:string; MyMealPlanId
                       index === 0 ? "bg-customBlue" : "bg-[#252525]"
                     }`}
                   >
-                <span
-                  className="absolute top-0 left-0 bg-customBlue text-white text-sm px-6 py-1 border-r-[4px] border-b-[4px] border-black rounded-tl-md">
-                  {category.charAt(0).toUpperCase() + category.slice(1)}
-                </span>
+                    <span className="absolute top-0 left-0 bg-customBlue text-white text-sm px-6 py-1 border-r-[4px] border-b-[4px] border-black rounded-tl-md">
+                      {category.charAt(0).toUpperCase() + category.slice(1)}
+                    </span>
 
                     {meal ? (
                       <div className="flex justify-between items-center space-x-4">
                         <div className="p-2 mt-4">
                           <p className="flex text-sm justify-between">
-                            <span className="pr-5">Protein</span> <span>{meal.protein}g</span>
+                            <span className="pr-5">Protein</span>{" "}
+                            <span>{meal.protein}g</span>
                           </p>
                           <p className="flex text-sm justify-between">
-                            <span className="pr-5">Carbohydrate</span> <span>{meal.carbs}g</span>
+                            <span className="pr-5">Carbohydrate</span>{" "}
+                            <span>{meal.carbs}g</span>
                           </p>
                           <p className="flex text-sm justify-between">
-                            <span className="pr-5">Fat</span> <span>{meal.fats}g</span>
+                            <span className="pr-5">Fat</span>{" "}
+                            <span>{meal.fats}g</span>
                           </p>
                           <p className="text-xs font-extralight mt-4">
-                            Calorie <span className="font-semibold">{meal.calories}</span> kcal
+                            Calorie{" "}
+                            <span className="font-semibold">
+                              {meal.calories}
+                            </span>{" "}
+                            kcal
                           </p>
                         </div>
                         <div className="flex flex-col items-center">
@@ -246,19 +279,21 @@ export default function MyMealPlan({params}:{params:{locale:string; MyMealPlanId
                         </div>
                       </div>
                     ) : (
-                      <div className="text-gray-400 text-sm">No meals available for {category}.</div>
+                      <div className="text-gray-400 text-sm">
+                        No meals available for {category}.
+                      </div>
                     )}
                   </div>
                 );
               });
             })()
           ) : (
-            <div className="text-gray-400 text-sm">Select a day to view meals.</div>
+            <div className="text-gray-400 text-sm">
+              Select a day to view meals.
+            </div>
           )}
         </div>
       </div>
     </div>
-  )
-    ;
-};
-
+  );
+}

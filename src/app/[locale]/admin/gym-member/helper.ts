@@ -43,9 +43,17 @@ import axios from "axios";
 const NEXT_PUBLIC_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const downloadUsers = async () => {
+  const token = localStorage.getItem("token");
   try {
     // Fetch members from the API
-    const response = await axios.get(`${NEXT_PUBLIC_API_BASE_URL}/api/members`);
+    const response = await axios.get(
+      `${NEXT_PUBLIC_API_BASE_URL}/api/members`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     const users = response.data.data.users;
 
     // Filter users if needed

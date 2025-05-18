@@ -39,12 +39,17 @@ const ShopPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-
+  const token = localStorage.getItem("token");
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await fetch(
-          `${NEXT_PUBLIC_API_BASE_URL}/api/inventory/`
+          `${NEXT_PUBLIC_API_BASE_URL}/api/inventory/`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         const data: { success: boolean; data: Product[] } =
           await response.json();

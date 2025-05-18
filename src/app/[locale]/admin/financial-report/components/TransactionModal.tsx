@@ -5,7 +5,6 @@ import ConfirmDeleteModal from "../../components/ConfirmDeleteModal";
 import SmallLoading from "../../components/SmallLoading";
 const NEXT_PUBLIC_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-
 interface TransactionModalProps {
   transaction: any;
   closeModal: () => void;
@@ -22,6 +21,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
   });
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const token = localStorage.getItem("token");
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -33,7 +33,12 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
     axios
       .patch(
         `${NEXT_PUBLIC_API_BASE_URL}/api/finance/${transaction.id}`,
-        editedTransaction
+        editedTransaction,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       )
       .then((response) => {
         const updatedTransaction = response.data.transaction;
@@ -51,7 +56,11 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
   const handleDelete = () => {
     setIsLoading(true);
     axios
-      .delete(`${NEXT_PUBLIC_API_BASE_URL}/api/finance/${transaction.id}`)
+      .delete(`${NEXT_PUBLIC_API_BASE_URL}/api/finance/${transaction.id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then(() => {
         updateTransactions(transaction, true);
         closeModal();
@@ -154,7 +163,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
       </div>
 
       <ConfirmDeleteModal
-        isLoading
+        isLoading={isLoading}
         isOpen={isConfirmDeleteOpen}
         onClose={() => setIsConfirmDeleteOpen(false)}
         onConfirm={() => {

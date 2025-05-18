@@ -75,10 +75,16 @@ export default function UserLayout({
   const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const getUserDetails = useCallback(async () => {
+    const token = localStorage.getItem("token");
     try {
       const res = await fetch(
         `${NEXT_PUBLIC_API_BASE_URL}/api/members/${userId}`,
-        { cache: "no-store" }
+        {
+          cache: "no-store",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       if (!res.ok) {
         if (res.status === 404) {

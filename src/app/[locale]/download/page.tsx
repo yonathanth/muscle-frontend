@@ -15,7 +15,9 @@ const fetchImageAsBase64 = async (url: string) => {
 };
 const fetchImageAsBase642 = async (url: string): Promise<string | null> => {
   try {
-    const response = await fetch(`https://robi-api.musclefitness.com${url}`);
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}${url}`
+    );
     const blob = await response.blob();
     return new Promise((resolve) => {
       const reader = new FileReader();
@@ -55,7 +57,7 @@ const capitalize = (name: string) =>
 const downloadAllMemberIds = async () => {
   try {
     const response = await fetch(
-      "https://robi-api.musclefitness.com/api/download"
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/download`
     );
     const { data: members } = await response.json();
 
@@ -91,7 +93,7 @@ const downloadAllMemberIds = async () => {
         : null;
 
       const barcodeImgBase64 = member.barcode;
-      const logoBase64 = await fetchImageAsBase64("/Images/logo.png");
+      const logoBase64 = await fetchImageAsBase64("/Images/logo (3).svg");
 
       if (i > 0) doc.addPage();
 

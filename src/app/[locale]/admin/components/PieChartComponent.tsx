@@ -44,6 +44,7 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 const PieChartComponent: React.FC = () => {
+  const token = localStorage.getItem("token");
   const [chartData, setChartData] = useState<ChartDataItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [viewType, setViewType] = useState<"membership" | "status">(
@@ -54,7 +55,12 @@ const PieChartComponent: React.FC = () => {
     const fetchChartData = async () => {
       try {
         const response = await axios.get(
-          `${NEXT_PUBLIC_API_BASE_URL}/api/dashboard/pieChartData?type=${viewType}`
+          `${NEXT_PUBLIC_API_BASE_URL}/api/dashboard/pieChartData?type=${viewType}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         if (response.data.success) {
           const breakdown = response.data.data.breakdown;

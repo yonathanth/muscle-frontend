@@ -129,7 +129,7 @@ const EditAdmin = ({ setShowModal, fetchData, member }: EditAdminProps) => {
       level: member.level || "",
     });
   }, [member]);
-
+  const token = localStorage.getItem("token");
   const [services, setServices] = useState<Service[]>([]);
   const [selectedServiceId, setSelectedServiceId] = useState<string | null>(
     null
@@ -140,7 +140,12 @@ const EditAdmin = ({ setShowModal, fetchData, member }: EditAdminProps) => {
   const fetchServices = async () => {
     try {
       const response = await axios.get(
-        `${NEXT_PUBLIC_API_BASE_URL}/api/services`
+        `${NEXT_PUBLIC_API_BASE_URL}/api/services`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       setServices(response.data.data);
     } catch {
@@ -250,7 +255,10 @@ const EditAdmin = ({ setShowModal, fetchData, member }: EditAdminProps) => {
         `${NEXT_PUBLIC_API_BASE_URL}/api/members/${member.id}`,
         formDataToSend,
         {
-          headers: { "Content-Type": "multipart/form-data" },
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 

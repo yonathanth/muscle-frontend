@@ -7,7 +7,6 @@ import AdminHeader from "../components/AdminHeader";
 import SmallLoading from "../components/SmallLoading";
 const NEXT_PUBLIC_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-
 interface Product {
   category: string;
   id: string;
@@ -37,12 +36,20 @@ const HomePage = () => {
     category: "Equipment",
     price: "", // Add price field
   });
+  const token = localStorage.getItem("token");
 
   // Fetch products from backend on component mount
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch(`${NEXT_PUBLIC_API_BASE_URL}/api/inventory/`);
+        const response = await fetch(
+          `${NEXT_PUBLIC_API_BASE_URL}/api/inventory/`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         const data = await response.json();
         if (data.success) {
           setProducts(data.data); // Update the state with the fetched products
@@ -81,6 +88,9 @@ const HomePage = () => {
           `${NEXT_PUBLIC_API_BASE_URL}/api/inventory/${productToDelete.id}`,
           {
             method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
         );
         const responeData = await response.json();
@@ -129,6 +139,9 @@ const HomePage = () => {
           {
             method: "PUT",
             body: formData,
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
         );
 
@@ -168,10 +181,16 @@ const HomePage = () => {
     console.log("FormData being sent:", newProduct);
 
     try {
-      const response = await fetch(`${NEXT_PUBLIC_API_BASE_URL}/api/inventory/`, {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        `${NEXT_PUBLIC_API_BASE_URL}/api/inventory/`,
+        {
+          method: "POST",
+          body: formData,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       const responseData = await response.json();
 

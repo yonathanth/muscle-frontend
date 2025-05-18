@@ -109,7 +109,7 @@ const EditAdmin = ({ setShowModal, fetchData, member }: EditAdminProps) => {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-
+  const token = localStorage.getItem("token");
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, files } = e.target;
     setFormData((prev) => ({
@@ -175,7 +175,10 @@ const EditAdmin = ({ setShowModal, fetchData, member }: EditAdminProps) => {
         `${NEXT_PUBLIC_API_BASE_URL}/api/members/${member.id}`,
         formDataToSend,
         {
-          headers: { "Content-Type": "multipart/form-data" },
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
