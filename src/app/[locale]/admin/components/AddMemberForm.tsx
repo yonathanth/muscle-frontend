@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import SmallLoading from "./SmallLoading";
+import FingerprintScanner from "./FingerprintScanner";
 const NEXT_PUBLIC_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 interface Service {
@@ -32,6 +33,7 @@ const AddAdmin = ({ setShowModal, fetchData }: AddAdminProps) => {
     emergencyContact: "",
     gender: "",
     profileImage: null as string | File | null,
+    fingerprintTemplate: null as string | null,
     height: 0.0,
     weight: 0.0,
     goal: "",
@@ -81,6 +83,13 @@ const AddAdmin = ({ setShowModal, fetchData }: AddAdminProps) => {
     setFormData((prev) => ({
       ...prev,
       [name]: files && files[0] ? files[0] : value,
+    }));
+  };
+
+  const handleFingerprintUpdate = (template: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      fingerprintTemplate: template,
     }));
   };
   const handleHealthConditionTextChange = (
@@ -330,6 +339,9 @@ const AddAdmin = ({ setShowModal, fetchData }: AddAdminProps) => {
               className="w-full p-2 rounded mt-1 bg-[#222] text-white"
             />
           </div>
+
+          {/* Fingerprint Scanner */}
+          <FingerprintScanner onTemplateUpdate={handleFingerprintUpdate} />
           {/* <div className="mb-4">
             <label className="block text-sm">Height</label>
             <input

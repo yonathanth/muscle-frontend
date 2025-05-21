@@ -1,102 +1,313 @@
 "use client";
 
-import React, { useState } from "react";
-import axios from "axios";
-const NEXT_PUBLIC_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+import React, { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { toast } from "sonner";
+import SockJS from "sockjs-client";
+import { Stomp } from "@stomp/stompjs";
 
-const AttendancePage: React.FC = () => {
-  const [userId, setUserId] = useState<string>("");
-  const [result, setResult] = useState<string>("");
-  const [error, setError] = useState<string>("");
-  const token = localStorage.getItem("token");
-  // Handle scanned ID
-  const handleScan = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const scannedId = e.target.value;
-    console.log(scannedId);
+// Configuration
+const FINGERPRINT_SERVER_URL = "http://localhost:8080/fingerprint-websocket";
 
-    setUserId(scannedId);
-    e.target.value = ""; // Clear input field for the next scan
-  };
+export default function AttendancePage() {
+  // State for connection
+  const [connectionStatus, setConnectionStatus] = useState<
+    "disconnected" | "connecting" | "connected" | "error"
+  >("disconnected");
+  const [stompClient, setStompClient] = useState<any>(null);
+  const [sessionId, setSessionId] = useState<string>("");
+  const [message, setMessage] = useState<string>(
+    "Connect to fingerprint scanner to begin"
+  );
+  const [scanProgress, setScanProgress] = useState<number>(0);
+  const [isScanning, setIsScanning] = useState<boolean>(false);
 
-  // Send ID to backend
-  const handleAttendance = async () => {
+  // Verification result state
+  const [verificationResult, setVerificationResult] = useState<{
+    verified: boolean;
+    userId?: string;
+    userName?: string;
+    timestamp?: string;
+    attendanceType?: "check-in" | "check-out";
+  } | null>(null);
+
+  // Generate unique session ID when component mounts
+  useEffect(() => {
+    setSessionId(`session-${Date.now()}`);
+  }, []);
+
+  // Connect to the WebSocket server
+  const connect = () => {
     try {
-      setError("");
-      setResult("Processing...");
+      setConnectionStatus("connecting");
+      setMessage("Connecting to fingerprint scanner...");
 
-      // Get current date in UTC
-      const now = new Date();
-      const utcDate = new Date(
-        Date.UTC(
-          now.getUTCFullYear(),
-          now.getUTCMonth(),
-          now.getUTCDate(),
-          now.getUTCHours(),
-          now.getUTCMinutes(),
-          now.getUTCSeconds()
-        )
-      );
+      const socket = new SockJS(FINGERPRINT_SERVER_URL);
+      const client = Stomp.over(socket);
 
-      const response = await axios.post(
-        `${NEXT_PUBLIC_API_BASE_URL}/api/attendance/${userId}`,
-        {
-          timestamp: utcDate.toISOString(),
+      // Disable debug logging
+      client.debug = () => {};
+
+      // Connect with callbacks
+      client.connect(
+        {},
+        (frame: any) => {
+          console.log("Connected:", frame);
+          setConnectionStatus("connected");
+          setStompClient(client);
+          setMessage("Connected to fingerprint scanner. Ready to scan.");
+
+          // Subscribe to session-specific channel
+          client.subscribe(
+            `/topic/fingerprint/${sessionId}`,
+            (message: any) => {
+              handleResponse(JSON.parse(message.body));
+            }
+          );
+
+          toast.success("Connected to fingerprint scanner");
         },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        (error: any) => {
+          console.error("Connection error:", error);
+          setConnectionStatus("error");
+          setMessage(
+            "Failed to connect to fingerprint scanner. Please ensure the server is running."
+          );
+          toast.error("Connection failed. Is the fingerprint server running?");
         }
       );
+    } catch (error) {
+      console.error("Connection error:", error);
+      setConnectionStatus("error");
+      setMessage("Error connecting to fingerprint scanner");
+      toast.error("Connection error. Check console for details.");
+    }
+  };
 
-      if (response.data.success) {
-        const { totalAttendance, name } = response.data.data;
-        setResult(`✅ Attendance recorded for ${name} successfully!`);
+  // Disconnect from the WebSocket server
+  const disconnect = () => {
+    if (stompClient && stompClient.connected) {
+      stompClient.disconnect(() => {
+        setConnectionStatus("disconnected");
+        setStompClient(null);
+        setMessage("Connect to fingerprint scanner to begin");
+        setScanProgress(0);
+        setVerificationResult(null);
+        setIsScanning(false);
+        toast.info("Disconnected from fingerprint scanner");
+      });
+    }
+  };
+
+  // Start fingerprint verification
+  const startVerification = () => {
+    if (stompClient && stompClient.connected) {
+      setIsScanning(true);
+      setVerificationResult(null);
+      setScanProgress(0);
+      setMessage("Place your finger on the scanner for verification");
+
+      stompClient.send(
+        "/app/scan",
+        {},
+        JSON.stringify({
+          operation: "verify",
+          sessionId: sessionId,
+        })
+      );
+    } else {
+      toast.error("Not connected to fingerprint scanner");
+    }
+  };
+
+  // Handle WebSocket responses
+  const handleResponse = (response: any) => {
+    console.log("Received:", response);
+
+    if (response.status === "in_progress") {
+      setMessage(response.message);
+      setScanProgress(response.progress);
+    } else if (response.status === "success") {
+      setIsScanning(false);
+
+      if (response.operation === "verify") {
+        // Handle verification result
+        if (response.verified) {
+          // Determine if it's a check-in or check-out (this info should come from backend)
+          const isCheckIn =
+            response.message.includes("check-in") ||
+            !response.message.includes("check-out");
+          const attendanceType = isCheckIn ? "check-in" : "check-out";
+
+          setMessage(
+            `Welcome, ${response.userName}! ${
+              attendanceType === "check-in" ? "Check-in" : "Check-out"
+            } recorded.`
+          );
+          toast.success(`User verified: ${response.userName}`);
+
+          setVerificationResult({
+            verified: true,
+            userId: response.userId,
+            userName: response.userName,
+            timestamp: new Date().toLocaleString(),
+            attendanceType: attendanceType,
+          });
+        } else {
+          setMessage(
+            "No matching user found. Please try again or contact admin."
+          );
+          toast.error("Verification failed: No matching user found");
+
+          setVerificationResult({
+            verified: false,
+            timestamp: new Date().toLocaleString(),
+          });
+        }
       }
-    } catch (err: any) {
-      setResult("");
-      setError(err.response?.data?.message || "An error occurred.");
-    } finally {
-      setUserId("");
+    } else if (response.status === "error") {
+      setMessage(`Error: ${response.message}`);
+      setIsScanning(false);
+      toast.error(response.message);
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-black px-6 py-12">
-      <h1 className="text-2xl font-bold text-customBlue mb-6">Attendance</h1>
+    <div className="space-y-6 p-6">
+      <Card className="p-6 bg-black border-gray-800">
+        <h1 className="text-2xl font-bold text-white mb-6">
+          Fingerprint Attendance System
+        </h1>
 
-      {/* Input for barcode scanner */}
-      <div className="w-full max-w-sm">
-        <label htmlFor="barcode" className="text-white text-sm">
-          Scan User ID:
-        </label>
-        <input
-          type="text"
-          id="barcode"
-          className="w-full mt-2 p-2 rounded-lg border border-gray-600 bg-[#121212] text-white focus:outline-none focus:ring-2 focus:ring-customBlue"
-          placeholder="Scan barcode..."
-          value={userId}
-          onChange={handleScan}
-          onKeyDown={(e) => e.key === "Enter" && handleAttendance()} // Trigger on Enter
-        />
-      </div>
+        {/* Connection Status */}
+        <div className="flex items-center justify-between mb-8 p-4 bg-gray-900 rounded-lg">
+          <div>
+            <p className="text-white mb-1">
+              Status:
+              <span
+                className={`ml-2 font-medium ${
+                  connectionStatus === "connected"
+                    ? "text-green-500"
+                    : connectionStatus === "connecting"
+                    ? "text-yellow-500"
+                    : connectionStatus === "error"
+                    ? "text-red-500"
+                    : "text-gray-400"
+                }`}
+              >
+                {connectionStatus === "connected"
+                  ? "Connected"
+                  : connectionStatus === "connecting"
+                  ? "Connecting..."
+                  : connectionStatus === "error"
+                  ? "Connection Error"
+                  : "Disconnected"}
+              </span>
+            </p>
+            <p className="text-sm text-gray-400">{sessionId}</p>
+          </div>
+          <div>
+            {connectionStatus !== "connected" &&
+            connectionStatus !== "connecting" ? (
+              <Button
+                onClick={connect}
+                className="bg-gradient-to-r from-red-500 to-yellow-500 hover:from-red-600 hover:to-yellow-600"
+              >
+                Connect
+              </Button>
+            ) : (
+              <Button
+                onClick={disconnect}
+                variant="outline"
+                className="border-red-500 text-red-500 hover:bg-red-950"
+              >
+                Disconnect
+              </Button>
+            )}
+          </div>
+        </div>
 
-      {/* Button to record attendance */}
-      <button
-        onClick={handleAttendance}
-        className="mt-4 bg-customBlue text-black font-semibold px-4 py-2 rounded-full hover:bg-customHoverBlue transition"
-        disabled={!userId}
-      >
-        Record Attendance
-      </button>
+        {/* Fingerprint Operations */}
+        <div className="mb-8">
+          <div className="flex gap-4 mb-4">
+            <Button
+              onClick={startVerification}
+              disabled={connectionStatus !== "connected" || isScanning}
+              className="flex-1 bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 disabled:opacity-50"
+            >
+              Scan Fingerprint for Attendance
+            </Button>
+          </div>
+        </div>
 
-      {/* Results Section */}
-      <div className="mt-6 w-full max-w-lg p-4 rounded-lg bg-[#121212] border border-gray-700">
-        {result && <p className="text-green-400 text-center">{result}</p>}
-        {error && <p className="text-red-500 text-center">{error}</p>}
-      </div>
+        {/* Scan Status and Progress */}
+        <div className="mb-8 p-6 bg-gray-900 rounded-lg text-center">
+          <p className="text-white mb-4">{message}</p>
+
+          {isScanning && scanProgress > 0 && (
+            <div className="w-full bg-gray-700 rounded-full h-2.5 mb-4">
+              <div
+                className="bg-gradient-to-r from-red-500 to-yellow-500 h-2.5 rounded-full"
+                style={{ width: `${scanProgress * 33.33}%` }}
+              ></div>
+            </div>
+          )}
+
+          {verificationResult && (
+            <div className="mt-6 p-4 rounded-lg bg-gray-800">
+              <h3 className="text-lg font-medium mb-2 text-white">
+                Verification Result
+              </h3>
+              <div
+                className={`text-${
+                  verificationResult.verified ? "green" : "red"
+                }-500 text-xl font-bold mb-4`}
+              >
+                {verificationResult.verified ? "SUCCESS" : "FAILED"}
+              </div>
+
+              {verificationResult.verified && (
+                <div className="text-left">
+                  <p className="text-white">
+                    <span className="text-gray-400">Name:</span>{" "}
+                    {verificationResult.userName}
+                  </p>
+                  <p className="text-white">
+                    <span className="text-gray-400">ID:</span>{" "}
+                    {verificationResult.userId}
+                  </p>
+                  <p className="text-white">
+                    <span className="text-gray-400">Time:</span>{" "}
+                    {verificationResult.timestamp}
+                  </p>
+                  <p className="text-white">
+                    <span className="text-gray-400">Action:</span>{" "}
+                    <span
+                      className={
+                        verificationResult.attendanceType === "check-in"
+                          ? "text-green-500"
+                          : "text-yellow-500"
+                      }
+                    >
+                      {verificationResult.attendanceType === "check-in"
+                        ? " Check-in"
+                        : " Check-out"}
+                    </span>
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Instructions */}
+        <div className="text-sm text-gray-400">
+          <p>1. Connect to the fingerprint scanner</p>
+          <p>2. Place your finger on the scanner to record attendance</p>
+          <p>3. Your presence will be automatically recorded</p>
+        </div>
+      </Card>
     </div>
   );
-};
-
-export default AttendancePage;
+}

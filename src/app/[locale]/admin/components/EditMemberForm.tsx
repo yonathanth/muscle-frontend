@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import SmallLoading from "./SmallLoading";
+import FingerprintScanner from "./FingerprintScanner";
 const NEXT_PUBLIC_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 interface Service {
@@ -58,6 +59,7 @@ interface Member {
   updatedAt: string;
   serviceId: string | null;
   profileImageUrl: string | null;
+  fingerprintTemplate: string | null;
   attendance: Attendance[];
   service: Service;
 }
@@ -82,6 +84,7 @@ const EditAdmin = ({ setShowModal, fetchData, member }: EditAdminProps) => {
     gender: "",
     serviceId: "",
     profileImage: null as string | File | null,
+    fingerprintTemplate: null as string | null,
     startDate: "",
     height: 0.0,
     weight: 0.0,
@@ -109,6 +112,7 @@ const EditAdmin = ({ setShowModal, fetchData, member }: EditAdminProps) => {
       emergencyContact: member.emergencyContact || "",
       gender: member.gender || "",
       profileImage: member.profileImageUrl || null, // Map profileImageUrl to profileImage
+      fingerprintTemplate: member.fingerprintTemplate || null,
       startDate: member.startDate || "",
       height: member.height || 0.0,
       weight: member.weight || 0.0,
@@ -166,6 +170,13 @@ const EditAdmin = ({ setShowModal, fetchData, member }: EditAdminProps) => {
       [name]: files && files[0] ? files[0] : value,
     }));
   };
+
+  const handleFingerprintUpdate = (template: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      fingerprintTemplate: template,
+    }));
+  };
   const handlehealthConditionTextChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -218,6 +229,7 @@ const EditAdmin = ({ setShowModal, fetchData, member }: EditAdminProps) => {
       ...formData,
       serviceId: selectedServiceId,
       healthCondition: JSON.stringify(formData.healthCondition), // Serialize health conditions as JSON
+      fingerprintTemplate: formData.fingerprintTemplate,
     };
 
     const filteredData = Object.entries(newMemberData).reduce(
@@ -426,6 +438,13 @@ const EditAdmin = ({ setShowModal, fetchData, member }: EditAdminProps) => {
               className="w-full p-2 rounded mt-1 bg-[#222] text-white"
             />
           </div>
+
+          {/* Fingerprint Scanner */}
+          <FingerprintScanner
+            userId={member.id}
+            onTemplateUpdate={handleFingerprintUpdate}
+            hasExistingTemplate={!!member.fingerprintTemplate}
+          />
           <div className="mb-4">
             <label className="block text-sm">Height</label>
             <input

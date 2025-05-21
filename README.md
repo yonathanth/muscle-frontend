@@ -32,3 +32,24 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+## Fingerprint Scanner Integration
+
+This project includes integration with a fingerprint scanner for attendance tracking. To use this feature:
+
+1. Start the fingerprint websocket server:
+
+   - Navigate to the `fingerprint-websocket-server` directory
+   - Run `run.bat` (Windows) or `./run.sh` (Linux/Mac)
+   - The server will start on port 8080
+
+2. Access the attendance feature:
+
+   - Navigate to the `/attendance` route in the web application
+   - Click "Connect" to establish connection with the fingerprint server
+   - Select "Verify Fingerprint" or "Register Fingerprint" as needed
+
+3. Troubleshooting:
+   - Ensure the ZKFinger hardware is properly connected
+   - Check that both the frontend and fingerprint server are running
+   - Verify the fingerprint server URL in the Attendance page configuration
