@@ -212,7 +212,6 @@ const AddAdmin = ({ setShowModal, fetchData }: AddAdminProps) => {
         <h2 className="text-lg mb-4 font-extralight text-customBlue">
           Add New Member
         </h2>
-        {error && <div className="error mb-4 text-red-500">{error}</div>}
         <form onSubmit={handleSubmit}>
           {/* Member Form Fields */}
           <div className="mb-4">
@@ -490,6 +489,7 @@ const AddAdmin = ({ setShowModal, fetchData }: AddAdminProps) => {
             </button>
           </div>
         </form>
+        {error && <div className="error mb-4 text-red-500">{error}</div>}
       </div>
     </div>
   );

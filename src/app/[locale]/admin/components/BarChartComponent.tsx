@@ -47,18 +47,30 @@ export function BarChartComponent() {
           weekday: "short",
         }),
         attendance: item.count,
+        tooltip: new Date(item.date).toLocaleDateString("en-US", {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        }),
       }));
       setChartData(weeklyData);
     } else if (selectedPeriod === "Monthly") {
       const monthlyData = data.monthly.map((item: any) => ({
         day: new Date(item.date).getDate(),
         attendance: item.count,
+        tooltip: new Date(item.date).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        }),
       }));
       setChartData(monthlyData);
     } else if (selectedPeriod === "Yearly") {
       const yearlyData = data.yearly.map((item: any) => ({
         day: item.month,
         attendance: item.count,
+        tooltip: `${item.month} ${new Date().getFullYear()}`,
       }));
       setChartData(yearlyData);
     }

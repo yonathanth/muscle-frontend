@@ -309,7 +309,6 @@ const EditAdmin = ({ setShowModal, fetchData, member }: EditAdminProps) => {
     <div className="fixed inset-0 bg-[#121212] bg-opacity-50 flex justify-center items-center z-10">
       <div className="bg-[#121212] text-white pr-10 pl-10 pt-6 rounded-lg shadow-lg max-w-2xl w-full h-[80vh] overflow-y-auto">
         <h2 className="text-lg mb-4 font-extralight">Edit Member</h2>
-        {error && <div className="error mb-4 text-red-500">{error}</div>}
         <form onSubmit={handleSubmit}>
           {/* Member Form Fields */}
           <div className="mb-4">
@@ -592,6 +591,7 @@ const EditAdmin = ({ setShowModal, fetchData, member }: EditAdminProps) => {
             </button>
           </div>
         </form>
+        {error && <div className="error mb-4 text-red-500">{error}</div>}
       </div>
     </div>
   );

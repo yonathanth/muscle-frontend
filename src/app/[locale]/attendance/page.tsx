@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
@@ -8,7 +8,7 @@ import SockJS from "sockjs-client";
 import { Stomp } from "@stomp/stompjs";
 
 // Configuration
-const FINGERPRINT_SERVER_URL = "http://localhost:8080/fingerprint-websocket";
+const FINGERPRINT_SERVER_URL = "https://localhost:8443/fingerprint-websocket";
 
 export default function AttendancePage() {
   // State for connection
@@ -23,18 +23,40 @@ export default function AttendancePage() {
   const [scanProgress, setScanProgress] = useState<number>(0);
   const [isScanning, setIsScanning] = useState<boolean>(false);
 
+  // Audio references
+  const successAudioRef = useRef<HTMLAudioElement | null>(null);
+  const failureAudioRef = useRef<HTMLAudioElement | null>(null);
+  const inactiveAudioRef = useRef<HTMLAudioElement | null>(null);
+
   // Verification result state
   const [verificationResult, setVerificationResult] = useState<{
     verified: boolean;
-    userId?: string;
     userName?: string;
-    timestamp?: string;
-    attendanceType?: "check-in" | "check-out";
+    remainingDays?: number;
+    status?: string;
+    userStatus?: string;
   } | null>(null);
 
   // Generate unique session ID when component mounts
   useEffect(() => {
     setSessionId(`session-${Date.now()}`);
+
+    // Create audio elements
+    successAudioRef.current = new Audio("/sounds/success.mp3");
+    failureAudioRef.current = new Audio("/sounds/failure.mp3");
+    inactiveAudioRef.current = new Audio("/sounds/failure.mp3");
+
+    // Preload audio
+    successAudioRef.current.load();
+    failureAudioRef.current.load();
+    inactiveAudioRef.current.load();
+
+    return () => {
+      // Clean up audio resources
+      if (successAudioRef.current) successAudioRef.current = null;
+      if (failureAudioRef.current) failureAudioRef.current = null;
+      if (inactiveAudioRef.current) inactiveAudioRef.current = null;
+    };
   }, []);
 
   // Connect to the WebSocket server
@@ -49,7 +71,6 @@ export default function AttendancePage() {
       // Disable debug logging
       client.debug = () => {};
 
-      // Connect with callbacks
       client.connect(
         {},
         (frame: any) => {
@@ -65,6 +86,9 @@ export default function AttendancePage() {
               handleResponse(JSON.parse(message.body));
             }
           );
+
+          // Start verification automatically on connect
+          startVerification();
 
           toast.success("Connected to fingerprint scanner");
         },
@@ -128,48 +152,77 @@ export default function AttendancePage() {
     if (response.status === "in_progress") {
       setMessage(response.message);
       setScanProgress(response.progress);
+      setIsScanning(true);
     } else if (response.status === "success") {
       setIsScanning(false);
 
       if (response.operation === "verify") {
         // Handle verification result
         if (response.verified) {
-          // Determine if it's a check-in or check-out (this info should come from backend)
           const isCheckIn =
             response.message.includes("check-in") ||
             !response.message.includes("check-out");
           const attendanceType = isCheckIn ? "check-in" : "check-out";
 
           setMessage(
-            `Welcome, ${response.userName}! ${
-              attendanceType === "check-in" ? "Check-in" : "Check-out"
-            } recorded.`
+            `Welcome, ${response.userName}! ${attendanceType} recorded.`
           );
-          toast.success(`User verified: ${response.userName}`);
+
+          // Play appropriate sound based on status
+          if (response.userStatus?.toLowerCase() === "active") {
+            successAudioRef.current?.play();
+            toast.success(`User verified: ${response.userName}`);
+          } else {
+            inactiveAudioRef.current?.play();
+            toast.warning(
+              `User verified but has status: ${response.userStatus}`
+            );
+          }
 
           setVerificationResult({
             verified: true,
-            userId: response.userId,
             userName: response.userName,
-            timestamp: new Date().toLocaleString(),
-            attendanceType: attendanceType,
+            remainingDays: response.remainingDays || 30,
+            status: response.status || attendanceType,
+            userStatus: response.userStatus,
           });
+
+          // Set timeout to start a new scan after 3 seconds
+          setTimeout(() => {
+            startVerification();
+          }, 3000);
         } else {
           setMessage(
             "No matching user found. Please try again or contact admin."
           );
+
+          // Play failure sound
+          failureAudioRef.current?.play();
           toast.error("Verification failed: No matching user found");
 
           setVerificationResult({
             verified: false,
-            timestamp: new Date().toLocaleString(),
+            status: "Failed",
           });
+
+          // Set timeout to start a new scan after 3 seconds
+          setTimeout(() => {
+            startVerification();
+          }, 3000);
         }
       }
     } else if (response.status === "error") {
       setMessage(`Error: ${response.message}`);
       setIsScanning(false);
+
+      // Play failure sound
+      failureAudioRef.current?.play();
       toast.error(response.message);
+
+      // Set timeout to restart scanning after an error
+      setTimeout(() => {
+        startVerification();
+      }, 3000);
     }
   };
 
@@ -274,26 +327,21 @@ export default function AttendancePage() {
                     {verificationResult.userName}
                   </p>
                   <p className="text-white">
-                    <span className="text-gray-400">ID:</span>{" "}
-                    {verificationResult.userId}
-                  </p>
-                  <p className="text-white">
-                    <span className="text-gray-400">Time:</span>{" "}
-                    {verificationResult.timestamp}
-                  </p>
-                  <p className="text-white">
-                    <span className="text-gray-400">Action:</span>{" "}
+                    <span className="text-gray-400">Status:</span>{" "}
                     <span
                       className={
-                        verificationResult.attendanceType === "check-in"
+                        verificationResult.userStatus === "active" ||
+                        verificationResult.userStatus === "Active"
                           ? "text-green-500"
                           : "text-yellow-500"
                       }
                     >
-                      {verificationResult.attendanceType === "check-in"
-                        ? " Check-in"
-                        : " Check-out"}
+                      {verificationResult.userStatus || "Unknown"}
                     </span>
+                  </p>
+                  <p className="text-white">
+                    <span className="text-gray-400">Remaining Days:</span>{" "}
+                    {verificationResult.remainingDays}
                   </p>
                 </div>
               )}
@@ -307,6 +355,15 @@ export default function AttendancePage() {
           <p>2. Place your finger on the scanner to record attendance</p>
           <p>3. Your presence will be automatically recorded</p>
         </div>
+
+        {/* Hidden audio elements (optional, can rely on the refs instead) */}
+        <audio src="/sounds/success.mp3" ref={successAudioRef} preload="auto" />
+        <audio src="/sounds/failure.mp3" ref={failureAudioRef} preload="auto" />
+        <audio
+          src="/sounds/failure.mp3"
+          ref={inactiveAudioRef}
+          preload="auto"
+        />
       </Card>
     </div>
   );
