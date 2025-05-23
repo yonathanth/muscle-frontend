@@ -8,7 +8,7 @@ import SockJS from "sockjs-client";
 import { Stomp } from "@stomp/stompjs";
 
 // Configuration
-const FINGERPRINT_SERVER_URL = "https://localhost:9443/fingerprint-websocket";
+const FINGERPRINT_SERVER_URL = "https://localhost:8443/fingerprint-websocket";
 
 export default function AttendancePage() {
   // State for connection
