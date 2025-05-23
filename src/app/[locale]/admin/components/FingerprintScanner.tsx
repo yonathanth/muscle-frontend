@@ -9,7 +9,7 @@ import { Stomp } from "@stomp/stompjs";
 import axios from "axios";
 
 // Configuration
-const FINGERPRINT_SERVER_URL = "http://localhost:8080/fingerprint-websocket";
+const FINGERPRINT_SERVER_URL = "https://localhost:8443/fingerprint-websocket";
 const NEXT_PUBLIC_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 interface FingerprintScannerProps {

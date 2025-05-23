@@ -5,7 +5,6 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faCalendar } from "@fortawesome/free-solid-svg-icons";
 import { useRouter, useSearchParams } from "next/navigation";
-const NEXT_PUBLIC_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 interface GymMember {
   id: string;
@@ -18,58 +17,55 @@ interface GymMember {
 
 const GymAttendanceList = () => {
   const router = useRouter();
-  const token = localStorage.getItem("token");
-
-  const [members, setMembers] = useState<GymMember[]>([]);
   const searchParams = useSearchParams();
-
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  const [members, setMembers] = useState<GymMember[]>([]);
   const [searchTerm, setSearchTerm] = useState(
     searchParams.get("searchTerm") || ""
   );
   const [selectedDate, setSelectedDate] = useState(
-    searchParams.get("date") || new Date().toLocaleDateString("en-CA") // Use YYYY-MM-DD format
+    searchParams.get("date") || new Date().toISOString().split("T")[0]
   );
-
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchAttendance = async () => {
+      if (!token) {
+        setLoading(false);
+        setMembers([]);
+        return;
+      }
+
       try {
         setLoading(true);
-        // Convert local date to UTC for API request
-        const utcDate = new Date(selectedDate + "T00:00:00");
         const response = await axios.get(
-          `${NEXT_PUBLIC_API_BASE_URL}/api/attendance?date=${utcDate.toISOString()}`,
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/attendance?date=${selectedDate}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           }
         );
-
-        // Ensure response is an array
-        const data = Array.isArray(response.data) ? response.data : [];
-        setMembers(data);
+        setMembers(Array.isArray(response.data) ? response.data : []);
       } catch (error) {
         console.error("Error fetching attendance data:", error);
-        setMembers([]); // Set to empty array in case of an error
+        setMembers([]);
       } finally {
         setLoading(false);
       }
     };
 
     fetchAttendance();
-  }, [selectedDate]);
+  }, [selectedDate, token]);
 
   useEffect(() => {
     const params = new URLSearchParams();
     if (searchTerm) params.set("searchTerm", searchTerm);
     if (selectedDate) params.set("date", selectedDate);
-
-    router.push(`?${params.toString()}`);
+    router.push(`?${params.toString()}`, { scroll: false });
   }, [searchTerm, selectedDate, router]);
 
-  // Filter members by search term
   const filteredMembers = members.filter((member) =>
     member.fullName.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -81,7 +77,6 @@ const GymAttendanceList = () => {
           Gym Attendance
         </h1>
         <div className="flex flex-col gap-4 w-full md:flex-row md:gap-4 md:w-auto">
-          {/* Date Picker */}
           <div className="relative w-full sm:w-auto">
             <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <FontAwesomeIcon
@@ -96,8 +91,6 @@ const GymAttendanceList = () => {
               onChange={(e) => setSelectedDate(e.target.value)}
             />
           </div>
-
-          {/* Search Bar */}
           <div className="relative w-full sm:w-auto">
             <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <FontAwesomeIcon
@@ -116,8 +109,7 @@ const GymAttendanceList = () => {
         </div>
       </div>
 
-      {/* Attendance Table */}
-      <div className="overflow-x-auto overflow-y-auto">
+      <div className="overflow-x-auto">
         <table className="w-full text-sm text-left text-gray-400">
           <thead className="bg-black border-t border-[#D9D9D93B] text-gray-300 uppercase">
             <tr>
@@ -156,7 +148,6 @@ const GymAttendanceList = () => {
                   <td className="px-6 py-2">{member.daysLeft}</td>
                   <td className="px-6 py-2">
                     {new Date(member.startDate).toLocaleDateString("en-US", {
-                      timeZone: "UTC",
                       year: "numeric",
                       month: "2-digit",
                       day: "2-digit",
@@ -167,7 +158,8 @@ const GymAttendanceList = () => {
             ) : (
               <tr>
                 <td colSpan={5} className="text-center text-gray-500 py-4">
-                  No members found for {selectedDate}
+                  No members found for{" "}
+                  {new Date(selectedDate).toLocaleDateString()}
                 </td>
               </tr>
             )}
