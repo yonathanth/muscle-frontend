@@ -12,7 +12,8 @@ import { Metadata, Viewport } from "next";
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 // Define base URL for absolute URLs in metadata
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://musclefitness.com";
+const baseUrl =
+  process.env.NEXT_PUBLIC_BASE_URL || "https://musclefitnesscenter.com";
 
 // Move viewport to a separate export
 export const viewport: Viewport = {
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
     template: "%s | Muscle Fitness",
   },
   description:
-    "MUSCLE FITNESS is a premier Health and Fitness Center in Addis, offering top-notch fitness services, personal training, and state-of-the-art facilities to help you achieve your fitness goals.",
+    "Muscle Fitness is a premier Health and Fitness Center in Addis, offering top-notch fitness services, personal training, and state-of-the-art facilities to help you achieve your fitness goals.",
   generator: "Next.js",
   applicationName: "Muscle Fitness",
   referrer: "origin-when-cross-origin",

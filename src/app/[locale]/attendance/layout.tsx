@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { ReactNode, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -25,9 +25,9 @@ const AttendanceLayout: React.FC<LayoutProps> = ({ children }) => {
 
     try {
       const decodedToken = jwtDecode<CustomJwtPayload>(token);
-      const { role} = decodedToken;
+      const { role } = decodedToken;
 
-      if (role !== "moderator" ) {
+      if (role !== "moderator" && role !== "admin" && role !== "root") {
         router.push("/");
       }
     } catch (error) {

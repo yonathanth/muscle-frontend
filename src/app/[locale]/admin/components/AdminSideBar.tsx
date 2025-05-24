@@ -34,7 +34,8 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ setActiveNav }) => {
     admin: [
       { name: "Dashboard", path: "/en/admin" },
       { name: "Gym Members", path: "/en/admin/gym-member" },
-      { name: "Attendance", path: "/en/admin/attendance-list" },
+      { name: "Attendance", path: "/en/attendance" },
+      { name: "Attendance List", path: "/en/admin/attendance-list" },
       { name: "Staff", path: "/en/admin/staff" },
       { name: "Employees", path: "/en/admin/employee" },
       { name: "Stock", path: "/en/admin/stock" },
@@ -45,14 +46,16 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ setActiveNav }) => {
     moderator: [
       { name: "Dashboard", path: "/en/admin" },
       { name: "Gym Members", path: "/en/admin/gym-member" },
-      { name: "Attendance", path: "/en/admin/attendance-list" },
+      { name: "Attendance", path: "/en/attendance" },
+      { name: "Attendance List", path: "/en/admin/attendance-list" },
       { name: "Services", path: "/en/admin/services" },
       { name: "Requests", path: "/en/admin/subscription-request" },
     ],
     root: [
       { name: "Dashboard", path: "/en/admin" },
       { name: "Gym Members", path: "/en/admin/gym-member" },
-      { name: "Attendance", path: "/en/admin/attendance-list" },
+      { name: "Attendance", path: "/en/attendance" },
+      { name: "Attendance List", path: "/en/admin/attendance-list" },
       { name: "Staff", path: "/en/admin/staff" },
       { name: "Employees", path: "/en/admin/employee" },
       { name: "Stock", path: "/en/admin/stock" },
