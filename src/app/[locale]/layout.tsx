@@ -92,14 +92,14 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Muscle Fitness - Premier Fitness Center",
     description:
-      "Transform your body and life at MUSCLE FITNESS. Professional trainers, state-of-the-art equipment, and personalized programs for all fitness levels.",
+      "Transform your body and life at Mucsle Fitness. Professional trainers, state-of-the-art equipment, and personalized programs for all fitness levels.",
     images: [`${baseUrl}/assets/images/hero.jpeg`],
     creator: "@MUSCLEFITNESSAddis",
   },
   icons: {
-    icon: "/favicon.ico",
+    icon: "/favicon-v2.ico",
     shortcut: "/favicon.ico",
-    apple: "/Images/logo.png",
+    apple: "/Images/logo (2).png",
   },
   verification: {
     google: "google-site-verification-code", // Add your Google verification code here
