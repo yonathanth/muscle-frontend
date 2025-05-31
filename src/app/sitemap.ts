@@ -1,7 +1,8 @@
 import { MetadataRoute } from "next";
 
 // Define your base URL
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://musclefitness.com";
+const baseUrl =
+  process.env.NEXT_PUBLIC_BASE_URL || "https://musclefitnesscenter.com";
 
 // Define the languages you support
 const languages = ["en", "am"];
