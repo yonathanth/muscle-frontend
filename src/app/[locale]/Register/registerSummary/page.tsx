@@ -70,7 +70,7 @@ const RegisterSummary = () => {
               Please transfer the total amount to one of the following accounts:
             </p>
 
-            <ul className="text-sm">
+            <ul className="text-sm text-black">
               <li>CBE: 1000403462385 - Nehemiah </li>
               <li>CBE: 1000351858684 - Muscle Fitness Gym </li>
 

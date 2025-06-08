@@ -472,6 +472,10 @@ const AddAdmin = ({ setShowModal, fetchData }: AddAdminProps) => {
             />
           </div> */}
           {/* Submit and Cancel Buttons */}
+          {error && (
+            <div className="error text-right mb-4 text-red-500">{error}</div>
+          )}
+
           <div className="flex justify-end space-x-4 mb-4">
             <button
               type="button"
@@ -480,6 +484,7 @@ const AddAdmin = ({ setShowModal, fetchData }: AddAdminProps) => {
             >
               Cancel
             </button>
+
             <button
               type="submit"
               className="hover:bg-customBlue bg-customHoverBlue text-white px-4 py-2 rounded"
@@ -489,7 +494,6 @@ const AddAdmin = ({ setShowModal, fetchData }: AddAdminProps) => {
             </button>
           </div>
         </form>
-        {error && <div className="error mb-4 text-red-500">{error}</div>}
       </div>
     </div>
   );

@@ -90,7 +90,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Muscle Fitness - Premier Fitness Center",
+    title: "Muscle Fitness - Fitness Center",
     description:
       "Transform your body and life at Mucsle Fitness. Professional trainers, state-of-the-art equipment, and personalized programs for all fitness levels.",
     images: [`${baseUrl}/assets/images/hero.jpeg`],

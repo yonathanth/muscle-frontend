@@ -360,15 +360,10 @@ const GymMembersList = () => {
             </span>
           </button>
           <div className="relative w-full sm:w-auto flex items-center">
-            <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <FontAwesomeIcon
-                icon={faSearch}
-                className="text-customBlue text-xl"
-              />
-            </span>
+            <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"></span>
             <input
               type="text"
-              placeholder="Search..."
+              placeholder="Search"
               className="w-full pl-10 px-6 py-2 rounded-l-md bg-[#ffffff29] text-gray-300 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-customBlue"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
@@ -376,9 +371,12 @@ const GymMembersList = () => {
             />
             <button
               onClick={handleSearch}
-              className="px-4 py-2 rounded-r-md bg-[#ffffff29] text-gray-300 border border-gray-600 border-l-0 hover:bg-[#ffffff3d]"
+              className="px-2 py-2 rounded-r-md bg-[#ffffff29] text-gray-300 border border-gray-600 border-l-0 hover:bg-[#ffffff3d]"
             >
-              Search
+              <FontAwesomeIcon
+                icon={faSearch}
+                className="text-customBlue text-xl"
+              />{" "}
             </button>
           </div>
           <div className="relative ">
