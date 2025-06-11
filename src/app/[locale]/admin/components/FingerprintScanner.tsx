@@ -69,7 +69,7 @@ const FingerprintScanner: React.FC<FingerprintScannerProps> = ({
           setConnectionStatus("connected");
           setStompClient(client);
           setMessage(
-            "Connected to fingerprint scanner. Start the registration process."
+            "Connected to fingerprint scanner. Ready to register fingerprint."
           );
 
           // Subscribe to session-specific channel
@@ -113,13 +113,13 @@ const FingerprintScanner: React.FC<FingerprintScannerProps> = ({
     }
   };
 
-  // Start fingerprint enrollment (3 scans)
+  // Start fingerprint enrollment
   const startEnrollment = () => {
     if (stompClient && stompClient.connected) {
       setIsScanning(true);
       setTemplateData(null);
       setScanProgress(0);
-      setMessage("Place your finger on the scanner for the first scan");
+      setMessage("Place your finger on the scanner");
 
       stompClient.send(
         "/app/scan",
@@ -145,7 +145,8 @@ const FingerprintScanner: React.FC<FingerprintScannerProps> = ({
       setMessage(response.message);
       setTemplateData(response.templateBase64);
       setIsScanning(false);
-      toast.success("Scan completed successfully");
+
+      toast.success("Fingerprint registration completed!");
 
       // Notify parent component of template update
       if (onTemplateUpdate && response.templateBase64) {
@@ -230,14 +231,14 @@ const FingerprintScanner: React.FC<FingerprintScannerProps> = ({
               </p>
             </div>
 
-            {/* Fingerprint Operations */}
+            {/* Start Registration Button */}
             {connectionStatus === "connected" &&
               !isScanning &&
               !templateData && (
                 <div className="mb-6">
                   <button
                     onClick={startEnrollment}
-                    className="w-full bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 text-white py-2 rounded-md"
+                    className="w-full bg-gradient-to-r from-red-500 to-yellow-500 hover:from-red-600 hover:to-yellow-600 text-white py-3 rounded-md transition-all"
                   >
                     Start Fingerprint Registration
                   </button>
@@ -249,9 +250,9 @@ const FingerprintScanner: React.FC<FingerprintScannerProps> = ({
               <p className="text-white mb-4">{message}</p>
 
               {isScanning && scanProgress > 0 && (
-                <div className="w-full bg-gray-700 rounded-full h-2.5 mb-4">
+                <div className="w-full bg-gray-700 rounded-full h-3 mb-4">
                   <div
-                    className="bg-gradient-to-r from-red-500 to-yellow-500 h-2.5 rounded-full"
+                    className="bg-gradient-to-r from-red-500 to-yellow-500 h-3 rounded-full transition-all duration-300"
                     style={{ width: `${scanProgress * 33.33}%` }}
                   ></div>
                 </div>
@@ -259,10 +260,16 @@ const FingerprintScanner: React.FC<FingerprintScannerProps> = ({
 
               {templateData && (
                 <div className="mt-4">
-                  <p className="text-green-500 mb-2">Template Data Received</p>
+                  <div className="flex items-center justify-center mb-2">
+                    <span className="text-green-500 text-lg">✅</span>
+                    <p className="text-green-500 ml-2 font-medium">
+                      Registration Successful
+                    </p>
+                  </div>
+
                   <div className="bg-gray-700 p-2 rounded text-left">
                     <code className="text-xs text-gray-300 break-all">
-                      {templateData.substring(0, 30)}...
+                      {templateData.substring(0, 50)}...
                     </code>
                   </div>
                 </div>

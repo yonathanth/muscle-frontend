@@ -364,7 +364,7 @@ const GymMembersList = () => {
             <input
               type="text"
               placeholder="Search"
-              className="w-full pl-10 px-6 py-2 rounded-l-md bg-[#ffffff29] text-gray-300 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-customBlue"
+              className="w-full  px-1 py-2 rounded-l-md bg-[#ffffff29] text-gray-300 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-customBlue"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               onKeyPress={handleKeyPress}
